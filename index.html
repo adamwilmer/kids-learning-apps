@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub - Choose Your Activity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .activity-card {
+            background: #f8f9fa;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            border-color: #764ba2;
+        }
+
+        .activity-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+
+        .activity-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .activity-description {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                font-size: 1em;
+                margin-bottom: 30px;
+            }
+
+            .activity-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .activity-card {
+                padding: 20px;
+            }
+
+            .activity-icon {
+                font-size: 3em;
+            }
+
+            .activity-title {
+                font-size: 1.4em;
+            }
+
+            .activity-description {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Learning Hub</h1>
+        <p class="subtitle">Choose an activity to practice!</p>
+
+        <div class="activity-grid">
+            <a href="spelling-bee.html" class="activity-card">
+                <div class="activity-icon">📝</div>
+                <div class="activity-title">Spelling Bee</div>
+                <div class="activity-description">
+                    Practice Year 1 spelling words with a fun quiz format
+                </div>
+            </a>
+
+            <a href="addition-subtraction.html" class="activity-card">
+                <div class="activity-icon">➕➖</div>
+                <div class="activity-title">Addition & Subtraction</div>
+                <div class="activity-description">
+                    Master addition and subtraction problems up to 20
+                </div>
+            </a>
+
+            <a href="times-tables.html" class="activity-card">
+                <div class="activity-icon">✖️➗</div>
+                <div class="activity-title">Times Tables</div>
+                <div class="activity-description">
+                    Practice multiplication and division from 1×1 to 12×12
+                </div>
+            </a>
+
+            <a href="guitar-learning.html" class="activity-card">
+                <div class="activity-icon">🎸</div>
+                <div class="activity-title">Learn Guitar</div>
+                <div class="activity-description">
+                    Interactive guitar chord diagrams and learning tools
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            Click any card above to start learning!
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Guitar - For Kids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .mode-selection {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .mode-selection h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mode-btn {
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .chord-library {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .chord-card {
+            background: #f8f9fa;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .chord-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+
+        .chord-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chord-type {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .chord-display {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .chord-display h2 {
+            color: #333;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .chord-display .chord-full-name {
+            color: #666;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .chord-diagram {
+            max-width: 300px;
+            margin: 0 auto 30px;
+        }
+
+        .fretboard {
+            position: relative;
+            padding: 20px 10px;
+        }
+
+        .string-names {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 15px;
+        }
+
+        .string-name {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+            width: 40px;
+            text-align: center;
+        }
+
+        .fret {
+            position: relative;
+            height: 60px;
+            border-bottom: 3px solid #333;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .fret:first-child {
+            border-top: 5px solid #333;
+        }
+
+        .string {
+            width: 3px;
+            background: #666;
+            position: relative;
+        }
+
+        .finger-position {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: #667eea;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .muted {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #dc3545;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .open {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #28a745;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .tips {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .tips h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips ul {
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .tips li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .chord-display {
+                padding: 20px;
+            }
+
+            .chord-display h2 {
+                font-size: 2em;
+            }
+
+            .mode-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .chord-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        .finger-legend {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .finger-legend h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .legend-items {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .legend-circle {
+            width: 25px;
+            height: 25px;
+            background: #667eea;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎸 Learn Guitar!</h1>
+
+        <div id="mode-selection" class="mode-selection">
+            <h2>What would you like to learn?</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="showChordLibrary()">
+                    🎵 Learn Chords
+                </button>
+                <button class="mode-btn" onclick="showStringNames()">
+                    🎸 Guitar Strings
+                </button>
+                <button class="mode-btn" onclick="showBasics()">
+                    📚 Guitar Basics
+                </button>
+            </div>
+        </div>
+
+        <div id="chord-library" class="chord-library hidden">
+            <h2 style="color: #333; text-align: center; margin-bottom: 10px;">Choose a Chord to Learn</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Click on any chord to see how to play it!</p>
+
+            <div class="chord-grid">
+                <div class="chord-card" onclick="showChord('C')">
+                    <div class="chord-name">C</div>
+                    <div class="chord-type">Major</div>
+                </div>
+                <div class="chord-card" onclick="showChord('G')">
+                    <div class="chord-name">G</div>
+                    <div class="chord-type">Major</div>
+                </div>
+                <div class="chord-card" onclick="showChord('D')">
+                    <div class="chord-name">D</div>
+                    <div class="chord-type">Major</div>
+                </div>
+                <div class="chord-card" onclick="showChord('A')">
+                    <div class="chord-name">A</div>
+                    <div class="chord-type">Major</div>
+                </div>
+                <div class="chord-card" onclick="showChord('E')">
+                    <div class="chord-name">E</div>
+                    <div class="chord-type">Major</div>
+                </div>
+                <div class="chord-card" onclick="showChord('Am')">
+                    <div class="chord-name">Am</div>
+                    <div class="chord-type">A Minor</div>
+                </div>
+                <div class="chord-card" onclick="showChord('Em')">
+                    <div class="chord-name">Em</div>
+                    <div class="chord-type">E Minor</div>
+                </div>
+                <div class="chord-card" onclick="showChord('Dm')">
+                    <div class="chord-name">Dm</div>
+                    <div class="chord-type">D Minor</div>
+                </div>
+            </div>
+
+            <button class="back-btn" onclick="showHome()">Back to Menu</button>
+        </div>
+
+        <div id="chord-display" class="chord-display hidden">
+            <h2 id="chord-title"></h2>
+            <div class="chord-full-name" id="chord-full-name"></div>
+
+            <div class="finger-legend">
+                <h4>Finger Numbers:</h4>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-circle">1</div>
+                        <span>Index</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-circle">2</div>
+                        <span>Middle</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-circle">3</div>
+                        <span>Ring</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-circle">4</div>
+                        <span>Pinky</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chord-diagram" id="chord-diagram"></div>
+
+            <div class="tips" id="chord-tips"></div>
+
+            <button class="back-btn" onclick="backToLibrary()">Back to Chord Library</button>
+        </div>
+
+        <div id="string-names-section" class="chord-display hidden">
+            <h2>Guitar String Names</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">From thickest to thinnest</p>
+
+            <div style="max-width: 400px; margin: 0 auto;">
+                <div style="background: #f8f9fa; border: 3px solid #667eea; border-radius: 15px; padding: 30px;">
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">6</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">E</div>
+                                <div style="color: #666;">Thickest string (Low E)</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">5</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">A</div>
+                                <div style="color: #666;">A string</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">4</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">D</div>
+                                <div style="color: #666;">D string</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">3</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">G</div>
+                                <div style="color: #666;">G string</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">2</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">B</div>
+                                <div style="color: #666;">B string</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold;">1</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 2em; font-weight: bold; color: #333;">E</div>
+                                <div style="color: #666;">Thinnest string (High E)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips" style="margin-top: 30px;">
+                    <h3>💡 Remember the strings:</h3>
+                    <ul>
+                        <li><strong>E-A-D-G-B-E</strong> (from thick to thin)</li>
+                        <li>Memory trick: <strong>"Eddie Ate Dynamite, Good Bye Eddie"</strong></li>
+                        <li>The thickest string (6th) makes the lowest sound</li>
+                        <li>The thinnest string (1st) makes the highest sound</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="back-btn" onclick="showHome()">Back to Menu</button>
+        </div>
+
+        <div id="basics-section" class="chord-display hidden">
+            <h2>Guitar Basics</h2>
+
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="tips" style="margin-bottom: 20px;">
+                    <h3>🎸 Parts of the Guitar</h3>
+                    <ul>
+                        <li><strong>Headstock:</strong> The top part where you tune the strings</li>
+                        <li><strong>Neck:</strong> The long part you hold with your left hand</li>
+                        <li><strong>Frets:</strong> The metal bars on the neck that divide the notes</li>
+                        <li><strong>Body:</strong> The big hollow part that makes the sound louder</li>
+                        <li><strong>Sound hole:</strong> The round hole in the body</li>
+                        <li><strong>Strings:</strong> The 6 wires you pluck to make music!</li>
+                    </ul>
+                </div>
+
+                <div class="tips" style="margin-bottom: 20px;">
+                    <h3>✋ How to Hold Your Guitar</h3>
+                    <ul>
+                        <li>Sit up straight with the guitar resting on your lap</li>
+                        <li>The guitar's body should rest on your right leg (if you're right-handed)</li>
+                        <li>Your left hand goes on the neck to press the strings</li>
+                        <li>Your right hand strums or picks near the sound hole</li>
+                        <li>Keep your shoulders relaxed!</li>
+                    </ul>
+                </div>
+
+                <div class="tips" style="margin-bottom: 20px;">
+                    <h3>👆 Reading Chord Diagrams</h3>
+                    <ul>
+                        <li><strong>Vertical lines</strong> = the 6 guitar strings</li>
+                        <li><strong>Horizontal lines</strong> = the frets on the guitar neck</li>
+                        <li><strong>Colored circles with numbers</strong> = where to put your fingers</li>
+                        <li><strong>X</strong> = don't play this string (muted)</li>
+                        <li><strong>O</strong> = play this string open (no finger on it)</li>
+                        <li>Numbers show which finger to use: 1=Index, 2=Middle, 3=Ring, 4=Pinky</li>
+                    </ul>
+                </div>
+
+                <div class="tips">
+                    <h3>🌟 Practice Tips</h3>
+                    <ul>
+                        <li>Practice a little bit every day (even just 10 minutes!)</li>
+                        <li>Your fingertips might hurt at first - this is normal!</li>
+                        <li>Press the strings firmly, right behind the fret</li>
+                        <li>Start slow and focus on making clear sounds</li>
+                        <li>Have fun and don't give up! 🎉</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="back-btn" onclick="showHome()">Back to Menu</button>
+        </div>
+    </div>
+
+    <script>
+        const chordData = {
+            'C': {
+                name: 'C Major',
+                frets: [
+                    { string: 5, fret: 3, finger: 3 },
+                    { string: 4, fret: 2, finger: 2 },
+                    { string: 3, fret: 0, finger: 0 },
+                    { string: 2, fret: 1, finger: 1 },
+                    { string: 1, fret: 0, finger: 0 }
+                ],
+                muted: [6],
+                tips: [
+                    'Don\'t play the 6th string (low E)',
+                    'Make sure each string rings clearly',
+                    'Keep your fingers curved, like holding a ball',
+                    'C is one of the first chords most people learn!'
+                ]
+            },
+            'G': {
+                name: 'G Major',
+                frets: [
+                    { string: 6, fret: 3, finger: 2 },
+                    { string: 5, fret: 2, finger: 1 },
+                    { string: 4, fret: 0, finger: 0 },
+                    { string: 3, fret: 0, finger: 0 },
+                    { string: 2, fret: 0, finger: 0 },
+                    { string: 1, fret: 3, finger: 3 }
+                ],
+                muted: [],
+                tips: [
+                    'Strum all 6 strings',
+                    'The pinky reaches all the way to the 1st string',
+                    'This is a bright, happy-sounding chord',
+                    'Very common in songs - practice this one a lot!'
+                ]
+            },
+            'D': {
+                name: 'D Major',
+                frets: [
+                    { string: 4, fret: 0, finger: 0 },
+                    { string: 3, fret: 2, finger: 1 },
+                    { string: 2, fret: 3, finger: 3 },
+                    { string: 1, fret: 2, finger: 2 }
+                ],
+                muted: [5, 6],
+                tips: [
+                    'Only play the top 4 strings',
+                    'Don\'t strum the 5th and 6th strings',
+                    'Keep your fingers in a triangle shape',
+                    'Great chord for songs in the key of D'
+                ]
+            },
+            'A': {
+                name: 'A Major',
+                frets: [
+                    { string: 5, fret: 0, finger: 0 },
+                    { string: 4, fret: 2, finger: 2 },
+                    { string: 3, fret: 2, finger: 3 },
+                    { string: 2, fret: 2, finger: 4 },
+                    { string: 1, fret: 0, finger: 0 }
+                ],
+                muted: [6],
+                tips: [
+                    'Don\'t play the 6th string',
+                    'Three fingers all on the 2nd fret',
+                    'Try to keep your fingers close together',
+                    'A bright, joyful chord!'
+                ]
+            },
+            'E': {
+                name: 'E Major',
+                frets: [
+                    { string: 6, fret: 0, finger: 0 },
+                    { string: 5, fret: 2, finger: 2 },
+                    { string: 4, fret: 2, finger: 3 },
+                    { string: 3, fret: 1, finger: 1 },
+                    { string: 2, fret: 0, finger: 0 },
+                    { string: 1, fret: 0, finger: 0 }
+                ],
+                muted: [],
+                tips: [
+                    'Strum all 6 strings',
+                    'Very powerful and full sound',
+                    'One of the easiest chords to play',
+                    'Great for rock and folk songs!'
+                ]
+            },
+            'Am': {
+                name: 'A Minor',
+                frets: [
+                    { string: 5, fret: 0, finger: 0 },
+                    { string: 4, fret: 2, finger: 3 },
+                    { string: 3, fret: 2, finger: 2 },
+                    { string: 2, fret: 1, finger: 1 },
+                    { string: 1, fret: 0, finger: 0 }
+                ],
+                muted: [6],
+                tips: [
+                    'Very similar to E major, just moved up one string',
+                    'Has a sad or emotional sound',
+                    'Don\'t play the 6th string',
+                    'Used in lots of popular songs'
+                ]
+            },
+            'Em': {
+                name: 'E Minor',
+                frets: [
+                    { string: 6, fret: 0, finger: 0 },
+                    { string: 5, fret: 2, finger: 2 },
+                    { string: 4, fret: 2, finger: 3 },
+                    { string: 3, fret: 0, finger: 0 },
+                    { string: 2, fret: 0, finger: 0 },
+                    { string: 1, fret: 0, finger: 0 }
+                ],
+                muted: [],
+                tips: [
+                    'Only two fingers needed - one of the easiest!',
+                    'Strum all 6 strings',
+                    'Sounds mysterious or sad',
+                    'Perfect for beginners to start with'
+                ]
+            },
+            'Dm': {
+                name: 'D Minor',
+                frets: [
+                    { string: 4, fret: 0, finger: 0 },
+                    { string: 3, fret: 2, finger: 2 },
+                    { string: 2, fret: 3, finger: 3 },
+                    { string: 1, fret: 1, finger: 1 }
+                ],
+                muted: [5, 6],
+                tips: [
+                    'Only play the top 4 strings',
+                    'Similar to D major but with a darker sound',
+                    'Keep fingers curved and press firmly',
+                    'Common in classical and folk music'
+                ]
+            }
+        };
+
+        function showHome() {
+            document.getElementById('mode-selection').classList.remove('hidden');
+            document.getElementById('chord-library').classList.add('hidden');
+            document.getElementById('chord-display').classList.add('hidden');
+            document.getElementById('string-names-section').classList.add('hidden');
+            document.getElementById('basics-section').classList.add('hidden');
+        }
+
+        function showChordLibrary() {
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('chord-library').classList.remove('hidden');
+        }
+
+        function showStringNames() {
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('string-names-section').classList.remove('hidden');
+        }
+
+        function showBasics() {
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('basics-section').classList.remove('hidden');
+        }
+
+        function backToLibrary() {
+            document.getElementById('chord-display').classList.add('hidden');
+            document.getElementById('chord-library').classList.remove('hidden');
+        }
+
+        function showChord(chordName) {
+            const chord = chordData[chordName];
+            document.getElementById('chord-title').textContent = chordName;
+            document.getElementById('chord-full-name').textContent = chord.name;
+
+            // Create chord diagram
+            const diagramHTML = createChordDiagram(chord);
+            document.getElementById('chord-diagram').innerHTML = diagramHTML;
+
+            // Create tips
+            const tipsHTML = `
+                <h3>💡 Tips for playing ${chordName}:</h3>
+                <ul>
+                    ${chord.tips.map(tip => `<li>${tip}</li>`).join('')}
+                </ul>
+            `;
+            document.getElementById('chord-tips').innerHTML = tipsHTML;
+
+            document.getElementById('chord-library').classList.add('hidden');
+            document.getElementById('chord-display').classList.remove('hidden');
+        }
+
+        function createChordDiagram(chord) {
+            const stringNames = ['E', 'A', 'D', 'G', 'B', 'e'];
+
+            let html = '<div class="fretboard">';
+
+            // String names
+            html += '<div class="string-names">';
+            for (let i = 6; i >= 1; i--) {
+                html += `<div class="string-name">${stringNames[6-i]}</div>`;
+            }
+            html += '</div>';
+
+            // Create 4 frets
+            for (let fret = 0; fret < 4; fret++) {
+                html += '<div class="fret">';
+
+                // Create 6 strings
+                for (let string = 6; string >= 1; string--) {
+                    html += '<div class="string">';
+
+                    // Check for muted strings
+                    if (fret === 0 && chord.muted.includes(string)) {
+                        html += '<div class="muted">✗</div>';
+                    }
+
+                    // Check for finger positions
+                    const fingerPos = chord.frets.find(f => f.string === string && f.fret === fret);
+                    if (fingerPos && fingerPos.finger > 0) {
+                        html += `<div class="finger-position">${fingerPos.finger}</div>`;
+                    }
+
+                    // Check for open strings
+                    if (fret === 0) {
+                        const isOpen = chord.frets.find(f => f.string === string && f.fret === 0);
+                        if (isOpen && !chord.muted.includes(string)) {
+                            html += '<div class="open">○</div>';
+                        }
+                    }
+
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+    </script>
+</body>
+</html>
