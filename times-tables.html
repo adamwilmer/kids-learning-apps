@@ -576,7 +576,9 @@
             document.getElementById('quiz-area').classList.remove('hidden');
 
             const allProblems = generateProblems(selectedMode);
-            shuffledProblems = shuffleArray(allProblems);
+            const shuffled = shuffleArray(allProblems);
+            // Limit to 20 random questions
+            shuffledProblems = shuffled.slice(0, 20);
             currentIndex = 0;
             correctCount = 0;
             incorrectCount = 0;
