@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karate Belt Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.85em;
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .hero-badge {
+            background: #f4f4ff;
+            border: 2px solid #667eea;
+            border-radius: 14px;
+            padding: 10px 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .section-heading p {
+            color: #666;
+        }
+
+        .belt-track {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .belt-chip {
+            border: none;
+            border-radius: 16px;
+            padding: 18px 16px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            min-height: 120px;
+        }
+
+        .belt-chip.active {
+            outline: 3px solid rgba(51, 51, 51, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .belt-chip:hover {
+            transform: translateY(-4px);
+        }
+
+        .belt-name {
+            font-size: 1.1em;
+        }
+
+        .belt-range {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .belt-details {
+            background: #f8f9ff;
+            border: 2px solid #dfe3ff;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .belt-level-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: rgba(118, 75, 162, 0.1);
+            color: #764ba2;
+        }
+
+        .belt-details h3 {
+            font-size: 1.6em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .belt-description {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .belt-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #e0e0f0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .detail-card h4 {
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .detail-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-card li {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .detail-card li strong {
+            display: block;
+            color: #333;
+        }
+
+        .detail-card li span {
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .coach-tip {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #444;
+            font-size: 0.9em;
+        }
+
+        .flashcards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .flashcard {
+            perspective: 1000px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            min-height: 220px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard:hover .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+
+        .flashcard-back {
+            background: white;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .flashcard-translation {
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .flashcard-steps {
+            list-style: decimal;
+            padding-left: 18px;
+            text-align: left;
+            color: #555;
+        }
+
+        .kata-grid, .kumite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f9ff;
+            border: 1px solid #dfe3ff;
+            border-radius: 18px;
+            padding: 20px;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-card h3 {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .info-card p {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .quiz-card {
+            background: #f8f9ff;
+            border-radius: 20px;
+            border: 2px solid #dfe3ff;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .quiz-question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            border: 2px solid #dfe3ff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border 0.2s ease, transform 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(4px);
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .quiz-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn, .secondary-btn {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #e0e0f0;
+            color: #333;
+        }
+
+        .quiz-status {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 25px;
+                border-radius: 18px;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .belt-track {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .flashcard-inner {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <p class="eyebrow">Shotokan Journey</p>
+            <h1>Karate Belt Adventure</h1>
+            <p>Explore each Shotokan belt, learn the Japanese terms with English translations, and track what to practice before your next grading. Click the belts, read the tips, then test your knowledge!</p>
+            <div class="hero-badges">
+                <div class="hero-badge">Ages 8-12</div>
+                <div class="hero-badge">Translations Included</div>
+                <div class="hero-badge">Quick Quiz</div>
+            </div>
+        </header>
+
+        <section class="belt-explorer">
+            <div class="section-heading">
+                <h2>Belt Explorer</h2>
+                <p>Choose a belt to view the kihon (basics), kata (forms), and kumite (sparring) focus for that grading.</p>
+            </div>
+            <div id="beltTrack" class="belt-track"></div>
+            <div id="beltDetails" class="belt-details"></div>
+        </section>
+
+        <section class="technique-cards">
+            <div class="section-heading">
+                <h2>Technique Flashcards</h2>
+                <p>Flip the cards to see simple step-by-step cues. Practice slowly, then add speed.</p>
+            </div>
+            <div class="flashcards" id="flashcardGrid"></div>
+        </section>
+
+        <section class="kata-spotlight">
+            <div class="section-heading">
+                <h2>Kata Spotlight</h2>
+                <p>These forms match each belt stage. Visualize the story and move with strong stances.</p>
+            </div>
+            <div class="kata-grid" id="kataGrid"></div>
+        </section>
+
+        <section class="kumite-tips">
+            <div class="section-heading">
+                <h2>Kumite Confidence</h2>
+                <p>Keep sparring safe and fun with these reminders.</p>
+            </div>
+            <div class="kumite-grid" id="kumiteGrid"></div>
+        </section>
+
+        <section class="quiz-section">
+            <div class="section-heading">
+                <h2>Belt Knowledge Quiz</h2>
+                <p>Answer the questions to see if you're ready for your next dojo chat.</p>
+            </div>
+            <div class="quiz-card">
+                <div id="quizQuestion" class="quiz-question"></div>
+                <div id="quizOptions" class="quiz-options"></div>
+                <div class="quiz-actions">
+                    <button id="nextQuestion" class="primary-btn">Next Question</button>
+                    <button id="resetQuiz" class="secondary-btn">Restart Quiz</button>
+                </div>
+                <div id="quizStatus" class="quiz-status"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const beltData = [
+            {
+                id: 'white',
+                label: 'Novice → 9th Kyu',
+                nickname: 'White Belt',
+                color: '#f5f5f5',
+                textColor: '#333',
+                level: 'Beginner',
+                description: 'Learn stable stances, straight punches, and respectful etiquette.',
+                kata: [{ name: 'Kihon Kata', translation: 'Basic form' }],
+                kumite: 'Sanbon or Gohon Kumite attacking with jodan oi tsuki (high stepping punch) and chudan oi tsuki (middle stepping punch).',
+                coachTip: 'Imagine a laser line from your fist to the target so every punch feels direct.',
+                kihon: [
+                    { term: 'Oi Tsuki', translation: 'Stepping punch', note: 'Push from your back foot to power the punch.' },
+                    { term: 'Jodan Age Uke', translation: 'Upper rising block', note: 'Brush past the forehead to lift the attack away.' },
+                    { term: 'Chudan Soto Uke', translation: 'Middle outside block', note: 'Rotate the forearm outward to defend the ribs.' },
+                    { term: 'Mae Geri', translation: 'Front kick', note: 'Lift the knee high, extend, then snap back quickly.' }
+                ]
+            },
+            {
+                id: 'orange',
+                label: '9th Kyu → 8th Kyu',
+                nickname: 'Orange Belt',
+                color: '#f39c12',
+                textColor: '#fff',
+                level: 'Beginner',
+                description: 'Add sharper knife-hand blocks and introduce side kicks.',
+                kata: [{ name: 'Heian Shodan', translation: 'Peaceful Mind, Level 1' }],
+                kumite: 'Continue Sanbon/Gohon Kumite with clean targets and rhythm.',
+                coachTip: 'Keep your hips square when sending side kicks so you stay balanced.',
+                kihon: [
+                    { term: 'Chudan Uchi Uke', translation: 'Middle inside block', note: 'Protect the ribs by sweeping inward.' },
+                    { term: 'Shuto Uke', translation: 'Knife-hand block', note: 'Stretch fingers long while keeping the thumb tucked.' },
+                    { term: 'Yoko Geri Keage', translation: 'Side snap kick', note: 'Whip the foot out and back like a quick door hinge.' },
+                    { term: 'Yoko Geri Kekomi', translation: 'Side thrust kick', note: 'Drive through the target with the heel.' }
+                ]
+            },
+            {
+                id: 'red',
+                label: '8th Kyu → 7th Kyu',
+                nickname: 'Red Belt',
+                color: '#c0392b',
+                textColor: '#fff',
+                level: 'Beginner',
+                description: 'Blend blocks with follow-up punches to build combos.',
+                kata: [{ name: 'Heian Nidan', translation: 'Peaceful Mind, Level 2' }],
+                kumite: 'Same pattern as before—focus on smooth transitions.',
+                coachTip: 'Say the combo out loud (block + punch) to lock in the rhythm.',
+                kihon: [
+                    { term: 'Age Uke + Gyaku Tsuki', translation: 'Rising block + reverse punch', note: 'Block high, rotate hips, then punch.' },
+                    { term: 'Soto Uke + Gyaku Tsuki', translation: 'Outside block + reverse punch', note: 'Keep elbows close before the block.' },
+                    { term: 'Uchi Uke + Gyaku Tsuki', translation: 'Inside block + reverse punch', note: 'Pull the blocking hand to your ear, then sweep in.' }
+                ]
+            },
+            {
+                id: 'yellow',
+                label: '7th Kyu → 6th Kyu',
+                nickname: 'Yellow Belt',
+                color: '#f1c40f',
+                textColor: '#8c6c00',
+                level: 'Intermediate',
+                description: 'Build speed in multiple punches and learn controlled elbow strikes.',
+                kata: [{ name: 'Heian Sandan', translation: 'Peaceful Mind, Level 3' }],
+                kumite: 'Kihon Ippon Kumite attacking with jodan and chudan oi tsuki from both stances.',
+                coachTip: 'Count "ichi, ni, san" for Sanbon Tsuki to keep every punch sharp.',
+                kihon: [
+                    { term: 'Sanbon Tsuki', translation: 'Triple punch', note: 'Stay low in zenkutsu dachi while punching.' },
+                    { term: 'Soto Uke + Empi Uchi', translation: 'Outside block + elbow strike', note: 'Snap the elbow straight forward after the block.' }
+                ]
+            },
+            {
+                id: 'green',
+                label: '6th Kyu → 5th Kyu',
+                nickname: 'Green Belt',
+                color: '#27ae60',
+                textColor: '#fff',
+                level: 'Intermediate',
+                description: 'Mix downward sweeps, fast jabs, and spear-hand strikes.',
+                kata: [{ name: 'Heian Yondan', translation: 'Peaceful Mind, Level 4' }],
+                kumite: 'Continue Kihon Ippon Kumite plus chudan mae geri (middle front kick) attacks.',
+                coachTip: 'Visualize clearing an attack with Gedan Barai before striking back.',
+                kihon: [
+                    { term: 'Age Uke + Gyaku Tsuki + Gedan Barai', translation: 'Rising block + reverse punch + downward sweep', note: 'Change levels smoothly without hopping.' },
+                    { term: 'Soto Uke + Empi Uchi + Uraken', translation: 'Outside block + elbow strike + backfist', note: 'Use the same arm for elbow and backfist.' },
+                    { term: 'Uchi Uke + Kizami Tsuki + Gyaku Tsuki', translation: 'Inside block + jab + reverse punch', note: 'Let the jab set up the power shot.' },
+                    { term: 'Shuto Uke + Nukite', translation: 'Knife-hand block + spear-hand strike', note: 'Keep the hand spear tight and shoulders relaxed.' }
+                ]
+            },
+            {
+                id: 'purple',
+                label: '5th Kyu → 4th Kyu',
+                nickname: 'Purple Belt',
+                color: '#8e44ad',
+                textColor: '#fff',
+                level: 'Intermediate',
+                description: 'Kick with control from long stances and extend knife-hand combinations.',
+                kata: [{ name: 'Heian Godan', translation: 'Peaceful Mind, Level 5' }],
+                kumite: 'Prior combos plus chudan yoko geri kekomi (middle side thrust kick) attacks.',
+                coachTip: 'Chamber every kick by lifting the knee sideways before extending.',
+                kihon: [
+                    { term: 'Soto Uke + Empi Uchi + Uraken + Gyaku Tsuki', translation: 'Outside block + elbow + backfist + reverse punch', note: 'Let each technique flow without pausing.' },
+                    { term: 'Shuto Uke + Mae Geri + Nukite', translation: 'Knife-hand block + front kick + spear-hand', note: 'Land the front foot softly before the spear-hand.' },
+                    { term: 'Yoko Geri Kekomi (Zenkutsu)', translation: 'Side thrust kick from front stance', note: 'Drive the hip through while keeping the front knee bent.' },
+                    { term: 'Mawashi Geri', translation: 'Roundhouse kick', note: 'Pivot on the supporting foot for higher kicks.' }
+                ]
+            },
+            {
+                id: 'blue',
+                label: '4th Kyu → Blue Belt',
+                nickname: 'Blue Belt',
+                color: '#2980b9',
+                textColor: '#fff',
+                level: 'Advanced',
+                description: 'Link longer combos and introduce powerful back kicks before moving into brown belts.',
+                kata: [{ name: 'Tekki Shodan', translation: 'Iron Horse, Level 1' }],
+                kumite: 'Same attacks as purple plus jodan mawashi geri (high roundhouse) pressure.',
+                coachTip: 'Use your hips as the engine so every combo feels like one connected move.',
+                kihon: [
+                    { term: 'Soto Uke + Empi Uchi + Uraken + Gyaku Tsuki + Gedan Barai', translation: 'Outside block + elbow + backfist + reverse punch + downward sweep', note: 'Lower your stance on the final sweep.' },
+                    { term: 'Uchi Uke + Kizami Tsuki + Gyaku Tsuki + Gedan Barai', translation: 'Inside block + jab + reverse punch + downward sweep', note: 'Keep the front knee bent for stability.' },
+                    { term: 'Ushiro Geri', translation: 'Back kick', note: 'Look over your shoulder before extending the heel.' }
+                ]
+            },
+            {
+                id: 'brown3',
+                label: '3rd Kyu Brown',
+                nickname: 'Brown Belt · 3rd Kyu',
+                color: '#7b4f33',
+                textColor: '#fff',
+                level: 'Advanced',
+                description: 'Chain multiple kicks with fast backfists and punches.',
+                kata: [{ name: 'Bassai Dai', translation: 'Penetrate the Fortress' }],
+                kumite: 'Jiyu Ippon Kumite attacking with jodan and chudan oi tsuki, chudan mae geri and yoko geri, jodan mawashi geri and chudan ushiro geri (right side only).',
+                coachTip: 'Aim for control: finish each kick before the next strike begins.',
+                kihon: [
+                    { term: 'Mae Geri + Oi Tsuki + Gyaku Tsuki', translation: 'Front kick + stepping punch + reverse punch', note: 'Land the front kick forward to flow into punches.' },
+                    { term: 'Yoko Geri + Uraken + Gyaku Tsuki', translation: 'Side kick + backfist + reverse punch', note: 'Rotate the hips back in for the punch.' },
+                    { term: 'Mawashi Geri + Uraken + Gyaku Tsuki', translation: 'Roundhouse kick + backfist + reverse punch', note: 'Snap the roundhouse back before striking with the hands.' },
+                    { term: 'Ushiro Geri + Uraken + Gyaku Tsuki', translation: 'Back kick + backfist + reverse punch', note: 'Use your heel as the striking surface.' }
+                ]
+            },
+            {
+                id: 'brown2',
+                label: '2nd Kyu Brown',
+                nickname: 'Brown Belt · 2nd Kyu',
+                color: '#5d3a24',
+                textColor: '#fff',
+                level: 'Advanced',
+                description: 'Master rapid-fire combos before stepping toward 1st Kyu.',
+                kata: [{ name: 'Bassai Dai', translation: 'Penetrate the Fortress' }],
+                kumite: 'Repeat the full Jiyu Ippon attack list with added speed but precise control.',
+                coachTip: 'Record yourself to check posture; small tweaks make big improvements now.',
+                kihon: [
+                    { term: 'Kizami Tsuki + Oi Tsuki + Gyaku Tsuki', translation: 'Jab + stepping punch + reverse punch', note: 'Stay grounded so punches travel in a straight line.' },
+                    { term: 'Mae Geri + Yoko Geri + Mawashi Geri + Ushiro Geri + Uraken + Gyaku Tsuki', translation: 'Front, side, roundhouse, and back kick + backfist + reverse punch', note: 'Reset your guard between each kick for control.' }
+                ]
+            },
+            {
+                id: 'brown1',
+                label: '1st Kyu Brown (black tips)',
+                nickname: 'Brown Belt · 1st Kyu',
+                color: '#4a2d1a',
+                textColor: '#fff',
+                level: 'Pre-Dan',
+                description: 'Dial in Shodan-level focus with advanced kata choices and long combinations.',
+                kata: [
+                    { name: 'Candidate list', translation: 'Bassai Dai, Jion, Kanku Dai, Enpi' },
+                    { name: 'Examiner list', translation: 'Tekki Shodan, Hangetsu, Jitte' }
+                ],
+                kumite: 'Jiyu Ippon plus controlled Jiyu Kumite with all attacks from both sides.',
+                coachTip: 'Breathe between combos so focus stays calm and sharp.',
+                kihon: [
+                    { term: 'Kizami Tsuki → Oi Tsuki → Gyaku Tsuki', translation: 'Jab, step punch, reverse punch', note: 'Return to guard instantly after each strike.' },
+                    { term: 'Mae Geri → Oi Tsuki → Gyaku Tsuki', translation: 'Front kick to double punch', note: 'Let the kick land forward to power the punches.' },
+                    { term: 'Yoko Geri → Uraken → Gyaku Tsuki', translation: 'Side kick, backfist, reverse punch', note: 'Re-center your hips before the punch.' },
+                    { term: 'Mawashi Geri → Uraken → Gyaku Tsuki', translation: 'Roundhouse kick combo', note: 'Snap the kick back to guard and strike immediately.' }
+                ]
+            },
+            {
+                id: 'black',
+                label: 'Black Belt (Shodan)',
+                nickname: 'Black Belt',
+                color: '#111111',
+                textColor: '#f8f9ff',
+                level: 'Dan Grade',
+                description: 'Celebrate earning your Sho-Dan and keep refining basics while teaching younger karateka.',
+                kata: [
+                    { name: 'List A', translation: 'Bassai Dai, Kanku Dai, Jion, Enpi, Hangetsu' },
+                    { name: 'List B', translation: 'Tekki Shodan, Bassai Sho, Jitte, Gankaku' }
+                ],
+                kumite: 'Jiyu Kumite plus advanced self-defense drills that mix all attacks with total control.',
+                coachTip: 'Lead by example—sharp basics inspire the whole dojo.',
+                kihon: [
+                    { term: 'Ushiro Geri → Uraken → Gyaku Tsuki', translation: 'Back kick combo', note: 'Spot the target before kicking so the heel lands cleanly.' },
+                    { term: 'Mae Geri → Yoko Geri → Mawashi Geri → Ushiro Geri → Uraken → Gyaku Tsuki', translation: 'Four-direction kicking chain', note: 'Keep your torso tall as the direction changes.' },
+                    { term: 'Mae Geri → Oi Tsuki → Gyaku Tsuki → Step Back Gedan Barai → Gyaku Tsuki → Yoko Geri → Uraken → Oi Tsuki', translation: 'Extended counter combo', note: 'Use breath counts to stay relaxed through the long sequence.' },
+                    { term: 'Same Leg Mae Geri → Yoko Geri → Ushiro Geri', translation: 'Single-leg balance drill', note: 'Squeeze the core so the standing leg stays steady.' }
+                ]
+            }
+        ];
+
+        const techniqueSpotlights = [
+            {
+                title: 'Mae Geri',
+                translation: 'Front kick',
+                quickTip: 'Lift the knee high before snapping out.',
+                steps: [
+                    'Chamber by lifting the knee like a marching step.',
+                    'Extend the foot so the ball of the foot hits first.',
+                    'Pull the foot back quickly and set it down with control.'
+                ]
+            },
+            {
+                title: 'Shuto Uke',
+                translation: 'Knife-hand block',
+                quickTip: 'Keep the wrist straight and fingers tight.',
+                steps: [
+                    'Pull the blocking hand to the opposite ear.',
+                    'Slice outward across your body with the blade of the hand.',
+                    'Finish with the other hand tucked at your hip.'
+                ]
+            },
+            {
+                title: 'Sanbon Tsuki',
+                translation: 'Triple punch',
+                quickTip: 'Each punch shares the same path.',
+                steps: [
+                    'Start in a long front stance.',
+                    'Punch chudan (middle), retract, then punch again.',
+                    'Drive from the legs so all three stay powerful.'
+                ]
+            },
+            {
+                title: 'Ushiro Geri',
+                translation: 'Back kick',
+                quickTip: 'Look over your shoulder before kicking.',
+                steps: [
+                    'Shift weight to the front leg and peek behind you.',
+                    'Lift the back knee and extend the heel straight back.',
+                    'Retract and return to guard with hands up.'
+                ]
+            }
+        ];
+
+        const kataInfo = [
+            {
+                title: 'Beginner Forms',
+                details: 'Kihon Kata, Heian Shodan, and Heian Nidan teach straight lines, center-line blocks, and breathing.',
+                advice: 'Count out loud to keep tempo steady.'
+            },
+            {
+                title: 'Intermediate Forms',
+                details: 'Heian Sandan through Heian Godan add turns, elbow strikes, and jumps.',
+                advice: 'Picture the opponent every time you change direction.'
+            },
+            {
+                title: 'Advanced Forms',
+                details: 'Tekki Shodan and Bassai Dai focus on hip power, short stances, and explosive defense.',
+                advice: 'Move like iron—strong, stable, and ready.'
+            }
+        ];
+
+        const kumiteTips = [
+            {
+                title: 'Respectful Start',
+                details: 'Always bow, check spacing, and agree on the attack before practicing.'
+            },
+            {
+                title: 'Breathing & Guard',
+                details: 'Exhale slightly with each strike and keep fists up to protect your head.'
+            },
+            {
+                title: 'Control First',
+                details: 'Touch the target lightly; precision impresses the examiner more than power.'
+            },
+            {
+                title: 'Safety Signals',
+                details: 'Use a gentle tap or “Yame!” (Stop!) if you feel unsteady.'
+            }
+        ];
+
+        const quizQuestions = [
+            {
+                question: 'Which kata do you study when moving from 9th Kyu to 8th Kyu?',
+                options: ['Heian Shodan', 'Tekki Shodan', 'Bassai Dai'],
+                answer: 0,
+                fact: 'Heian Shodan introduces long front stances and knife-hand blocks.'
+            },
+            {
+                question: 'What does “Mae Geri” translate to?',
+                options: ['Side kick', 'Front kick', 'Back kick'],
+                answer: 1,
+                fact: 'Mae means “front” and geri means “kick”.'
+            },
+            {
+                question: 'Which belt adds Sanbon Tsuki (triple punches)?',
+                options: ['Yellow Belt', 'Green Belt', 'Blue Belt'],
+                answer: 0,
+                fact: 'Yellow belts work on Sanbon Tsuki to sharpen speed and rhythm.'
+            },
+            {
+                question: 'What is Shuto Uke in English?',
+                options: ['Knife-hand block', 'Roundhouse kick', 'Elbow strike'],
+                answer: 0,
+                fact: 'Shuto refers to the “sword hand” edge used for blocking.'
+            },
+            {
+                question: 'Which kumite style is introduced at 3rd Kyu Brown?',
+                options: ['Sanbon Kumite', 'Jiyu Ippon Kumite', 'Gohon Kumite'],
+                answer: 1,
+                fact: '3rd Kyu Brown students practice semi-free sparring with preset attacks.'
+            }
+        ];
+
+        const beltTrack = document.getElementById('beltTrack');
+        const beltDetails = document.getElementById('beltDetails');
+        const flashcardGrid = findElement('flashcardGrid');
+        const kataGrid = findElement('kataGrid');
+        const kumiteGrid = findElement('kumiteGrid');
+        const quizQuestionEl = findElement('quizQuestion');
+        const quizOptionsEl = findElement('quizOptions');
+        const quizStatusEl = findElement('quizStatus');
+        const nextQuestionBtn = findElement('nextQuestion');
+        const resetQuizBtn = findElement('resetQuiz');
+
+        let activeBelt = beltData[0].id;
+        let quizIndex = 0;
+        let quizScore = 0;
+        let allowAnswer = true;
+
+        function findElement(id) {
+            return document.getElementById(id);
+        }
+
+        function renderBelts() {
+            beltTrack.innerHTML = '';
+            beltData.forEach((belt) => {
+                const button = document.createElement('button');
+                button.className = `belt-chip${belt.id === activeBelt ? ' active' : ''}`;
+                button.style.background = belt.color;
+                button.style.color = belt.textColor || '#333';
+                button.innerHTML = `
+                    <span class="belt-name">${belt.nickname}</span>
+                    <span class="belt-range">${belt.label}</span>
+                `;
+                button.addEventListener('click', () => {
+                    activeBelt = belt.id;
+                    renderBelts();
+                    renderBeltDetails();
+                });
+                beltTrack.appendChild(button);
+            });
+        }
+
+        function renderBeltDetails() {
+            const belt = beltData.find((b) => b.id === activeBelt);
+            if (!belt) return;
+            const kihonItems = belt.kihon.map((item) => `
+                <li>
+                    <strong>${item.term}</strong>
+                    <span>${item.translation} — ${item.note}</span>
+                </li>
+            `).join('');
+
+            const kataItems = belt.kata.map((kata) => `
+                <li>
+                    <strong>${kata.name}</strong>
+                    <span>${kata.translation}</span>
+                </li>
+            `).join('');
+
+            beltDetails.innerHTML = `
+                <div class="belt-level-badge">${belt.level}</div>
+                <h3>${belt.label}</h3>
+                <p class="belt-description">${belt.description}</p>
+                <div class="belt-columns">
+                    <div class="detail-card">
+                        <h4>Kihon Skills</h4>
+                        <ul>${kihonItems}</ul>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Kata Focus</h4>
+                        <ul>${kataItems}</ul>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Kumite Goal</h4>
+                        <p>${belt.kumite}</p>
+                    </div>
+                </div>
+                <div class="coach-tip"><strong>Coach Tip:</strong> ${belt.coachTip}</div>
+            `;
+        }
+
+        function renderFlashcards() {
+            flashcardGrid.innerHTML = techniqueSpotlights.map((technique) => `
+                <div class="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-face flashcard-front">
+                            <div class="flashcard-title">${technique.title}</div>
+                            <div class="flashcard-translation">${technique.translation}</div>
+                            <p>${technique.quickTip}</p>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <div class="flashcard-title">How-To</div>
+                            <ol class="flashcard-steps">
+                                ${technique.steps.map((step) => `<li>${step}</li>`).join('')}
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderKataCards() {
+            kataGrid.innerHTML = kataInfo.map((info) => `
+                <div class="info-card">
+                    <h3>${info.title}</h3>
+                    <p>${info.details}</p>
+                    <p><strong>Try this:</strong> ${info.advice}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderKumiteTips() {
+            kumiteGrid.innerHTML = kumiteTips.map((tip) => `
+                <div class="info-card">
+                    <h3>${tip.title}</h3>
+                    <p>${tip.details}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderQuizQuestion() {
+            const question = quizQuestions[quizIndex];
+            quizQuestionEl.textContent = question.question;
+            quizOptionsEl.innerHTML = '';
+            allowAnswer = true;
+
+            question.options.forEach((option, idx) => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option';
+                button.textContent = option;
+                button.addEventListener('click', () => handleAnswer(idx));
+                quizOptionsEl.appendChild(button);
+            });
+
+            quizStatusEl.textContent = `Question ${quizIndex + 1} of ${quizQuestions.length} • Score: ${quizScore}`;
+        }
+
+        function handleAnswer(selectedIndex) {
+            if (!allowAnswer) return;
+            allowAnswer = false;
+
+            const question = quizQuestions[quizIndex];
+            const optionButtons = quizOptionsEl.querySelectorAll('.quiz-option');
+            optionButtons.forEach((button, idx) => {
+                if (idx === question.answer) {
+                    button.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    button.classList.add('incorrect');
+                }
+                button.disabled = true;
+            });
+
+            if (selectedIndex === question.answer) {
+                quizScore += 1;
+            }
+
+            quizStatusEl.textContent = `${selectedIndex === question.answer ? 'Great job!' : 'Keep practicing!'} ${question.fact} • Score: ${quizScore}/${quizQuestions.length}`;
+        }
+
+        function nextQuestion() {
+            quizIndex = (quizIndex + 1) % quizQuestions.length;
+            renderQuizQuestion();
+        }
+
+        function resetQuiz() {
+            quizIndex = 0;
+            quizScore = 0;
+            renderQuizQuestion();
+        }
+
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        resetQuizBtn.addEventListener('click', resetQuiz);
+
+        renderBelts();
+        renderBeltDetails();
+        renderFlashcards();
+        renderKataCards();
+        renderKumiteTips();
+        renderQuizQuestion();
+    </script>
+</body>
+</html>
