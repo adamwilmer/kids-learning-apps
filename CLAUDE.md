@@ -8,8 +8,8 @@ This is a collection of standalone, single-file educational web applications des
 
 **Applications:**
 - `index.html` - Spelling Bee practice app for Year 1 students
-- `addition-subtraction.html` - Math practice for addition/subtraction (0-20)
-- `times-tables.html` - Multiplication and division practice (1×1 to 12×12)
+- `addition-subtraction.html` - Math practice for addition/subtraction with configurable max number (10-100)
+- `times-tables.html` - Multiplication and division practice with configurable max multiplier (6-24)
 - `guitar-learning.html` - Interactive guitar chord learning tool
 
 ## Architecture
@@ -51,9 +51,10 @@ Simply open any HTML file directly in a web browser. No server or build process 
 3. Test on mobile by resizing browser or using device emulation
 
 ### Adding New Content
-- **Spelling words**: Edit the `words` array in `index.html` (line 282)
-- **Chord data**: Modify the `chordData` object in `guitar-learning.html` (line 553)
-- **Math ranges**: Adjust loop bounds in generation functions (`addition-subtraction.html` line 439, `times-tables.html` line 436)
+- **Spelling words**: Edit the `words` array in `index.html`
+- **Chord data**: Modify the `chordData` object in `guitar-learning.html`
+- **Math ranges**: Use the built-in sliders in both math apps (addition-subtraction and times-tables)
+- **Quiz length**: Both math apps limit quizzes to 20 random questions regardless of range setting
 
 ## Code Style
 

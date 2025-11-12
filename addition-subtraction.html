@@ -92,6 +92,18 @@
                 font-size: 1em;
                 padding: 12px 20px;
             }
+
+            .slider-container {
+                padding: 15px;
+            }
+
+            .slider-container label {
+                font-size: 1em;
+            }
+
+            .slider-value {
+                font-size: 1.2em;
+            }
         }
 
         .progress {
@@ -349,6 +361,66 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
         }
+
+        .slider-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .slider-container label {
+            display: block;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
@@ -367,6 +439,18 @@
                 <button class="mode-btn" onclick="selectMode('both')">
                     Both
                 </button>
+            </div>
+            <div class="slider-container">
+                <label for="max-number">
+                    Maximum Number: <span class="slider-value" id="slider-value">20</span>
+                </label>
+                <input type="range"
+                       id="max-number"
+                       min="10"
+                       max="100"
+                       step="10"
+                       value="20"
+                       oninput="updateSliderValue(this.value)">
             </div>
             <button class="start-btn" onclick="startQuizWithMode()">Start Practice</button>
         </div>
@@ -391,6 +475,7 @@
                        class="answer-input"
                        placeholder="?"
                        autocomplete="off"
+                       inputmode="numeric"
                        autofocus>
                 <div class="feedback" id="feedback"></div>
             </div>
@@ -414,6 +499,7 @@
 
     <script>
         let selectedMode = 'addition';
+        let maxNumber = 20;
         let shuffledProblems = [];
         let currentIndex = 0;
         let correctCount = 0;
@@ -430,15 +516,20 @@
             event.target.classList.add('selected');
         }
 
-        // Generate all addition/subtraction problems up to 20
+        function updateSliderValue(value) {
+            maxNumber = parseInt(value);
+            document.getElementById('slider-value').textContent = value;
+        }
+
+        // Generate all addition/subtraction problems based on max number setting
         function generateProblems(mode) {
             const problems = [];
 
             // Generate addition problems
             if (mode === 'addition' || mode === 'both') {
-                for (let i = 0; i <= 20; i++) {
-                    for (let j = 0; j <= 20; j++) {
-                        if (i + j <= 20) {
+                for (let i = 0; i <= maxNumber; i++) {
+                    for (let j = 0; j <= maxNumber; j++) {
+                        if (i + j <= maxNumber) {
                             problems.push({
                                 num1: i,
                                 num2: j,
@@ -453,7 +544,7 @@
 
             // Generate subtraction problems
             if (mode === 'subtraction' || mode === 'both') {
-                for (let i = 0; i <= 20; i++) {
+                for (let i = 0; i <= maxNumber; i++) {
                     for (let j = 0; j <= i; j++) {
                         problems.push({
                             num1: i,
@@ -486,7 +577,9 @@
             document.getElementById('quiz-area').classList.remove('hidden');
 
             const allProblems = generateProblems(selectedMode);
-            shuffledProblems = shuffleArray(allProblems);
+            const shuffled = shuffleArray(allProblems);
+            // Limit to 20 random questions
+            shuffledProblems = shuffled.slice(0, 20);
             currentIndex = 0;
             correctCount = 0;
             incorrectCount = 0;
