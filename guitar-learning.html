@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn Guitar - For Kids</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNVM44YVQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KNVM44YVQV');
+    </script>
     <style>
         * {
             margin: 0;
@@ -534,9 +542,9 @@
                 </div>
 
                 <div class="tips">
-                    <h3>🌟 Practice Tips</h3>
+                    <h3>🌟 Practise Tips</h3>
                     <ul>
-                        <li>Practice a little bit every day (even just 10 minutes!)</li>
+                        <li>Practise a little bit every day (even just 10 minutes!)</li>
                         <li>Your fingertips might hurt at first - this is normal!</li>
                         <li>Press the strings firmly, right behind the fret</li>
                         <li>Start slow and focus on making clear sounds</li>
@@ -583,7 +591,7 @@
                     'Strum all 6 strings',
                     'The pinky reaches all the way to the 1st string',
                     'This is a bright, happy-sounding chord',
-                    'Very common in songs - practice this one a lot!'
+                    'Very common in songs - practise this one a lot!'
                 ]
             },
             'D': {
@@ -701,16 +709,40 @@
         function showChordLibrary() {
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('chord-library').classList.remove('hidden');
+
+            // Track mode selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'mode_select', {
+                    activity: 'guitar-learning',
+                    mode: 'chord-library'
+                });
+            }
         }
 
         function showStringNames() {
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('string-names-section').classList.remove('hidden');
+
+            // Track mode selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'mode_select', {
+                    activity: 'guitar-learning',
+                    mode: 'string-names'
+                });
+            }
         }
 
         function showBasics() {
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('basics-section').classList.remove('hidden');
+
+            // Track mode selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'mode_select', {
+                    activity: 'guitar-learning',
+                    mode: 'basics'
+                });
+            }
         }
 
         function backToLibrary() {
@@ -735,6 +767,15 @@
                 </ul>
             `;
             document.getElementById('chord-tips').innerHTML = tipsHTML;
+
+            // Track chord view
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'chord_view', {
+                    activity: 'guitar-learning',
+                    chord_name: chordName,
+                    chord_full_name: chord.name
+                });
+            }
 
             document.getElementById('chord-library').classList.add('hidden');
             document.getElementById('chord-display').classList.remove('hidden');

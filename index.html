@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Hub - Choose Your Activity</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNVM44YVQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KNVM44YVQV');
+    </script>
     <style>
         * {
             margin: 0;
@@ -145,10 +153,10 @@
 <body>
     <div class="container">
         <h1>Learning Hub</h1>
-        <p class="subtitle">Choose an activity to practice!</p>
+        <p class="subtitle">Choose an activity to practise!</p>
 
         <div class="activity-grid">
-            <a href="spelling-bee.html" class="activity-card">
+            <a href="spelling-bee.html" class="activity-card" onclick="gtag('event', 'activity_select', {activity: 'spelling-bee'});">
                 <div class="activity-icon">📝</div>
                 <div class="activity-title">Spelling Bee</div>
                 <div class="activity-description">
@@ -156,7 +164,7 @@
                 </div>
             </a>
 
-            <a href="addition-subtraction.html" class="activity-card">
+            <a href="addition-subtraction.html" class="activity-card" onclick="gtag('event', 'activity_select', {activity: 'addition-subtraction'});">
                 <div class="activity-icon">➕➖</div>
                 <div class="activity-title">Addition & Subtraction</div>
                 <div class="activity-description">
@@ -164,7 +172,7 @@
                 </div>
             </a>
 
-            <a href="times-tables.html" class="activity-card">
+            <a href="times-tables.html" class="activity-card" onclick="gtag('event', 'activity_select', {activity: 'times-tables'});">
                 <div class="activity-icon">✖️➗</div>
                 <div class="activity-title">Times Tables</div>
                 <div class="activity-description">
@@ -172,7 +180,7 @@
                 </div>
             </a>
 
-            <a href="guitar-learning.html" class="activity-card">
+            <a href="guitar-learning.html" class="activity-card" onclick="gtag('event', 'activity_select', {activity: 'guitar-learning'});">
                 <div class="activity-icon">🎸</div>
                 <div class="activity-title">Learn Guitar</div>
                 <div class="activity-description">
@@ -180,7 +188,7 @@
                 </div>
             </a>
 
-            <a href="karate-grading.html" class="activity-card">
+            <a href="karate-grading.html" class="activity-card" onclick="gtag('event', 'activity_select', {activity: 'karate-grading'});">
                 <div class="activity-icon">🥋</div>
                 <div class="activity-title">Karate Journey</div>
                 <div class="activity-description">
