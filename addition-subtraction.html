@@ -233,6 +233,12 @@
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
         }
 
+        .reset-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         .complete {
             text-align: center;
             padding: 30px;
@@ -382,6 +388,56 @@
             font-size: 1.3em;
         }
 
+        .timer-option {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .timer-option label {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .timer-display {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .timer-display .time {
+            font-size: 2em;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .timer-display .time.warning {
+            color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         input[type="range"] {
             width: 100%;
             height: 8px;
@@ -452,7 +508,16 @@
                        value="20"
                        oninput="updateSliderValue(this.value)">
             </div>
+            <div class="timer-option">
+                <input type="checkbox" id="timer-mode" onclick="toggleTimerMode()">
+                <label for="timer-mode">Timed Mode (1 minute)</label>
+            </div>
             <button class="start-btn" onclick="startQuizWithMode()">Start Practice</button>
+        </div>
+
+        <div class="timer-display hidden" id="timer-display">
+            <div style="font-size: 1em; color: #856404; margin-bottom: 5px;">Time Remaining</div>
+            <div class="time" id="timer-text">1:00</div>
         </div>
 
         <div class="progress hidden" id="progress">
@@ -463,7 +528,7 @@
                 <span id="total">0</span> total
             </div>
             <div style="margin-top: 10px; color: #999;">
-                Question <span id="current">0</span> of <span id="remaining">0</span>
+                Question <span id="current">0</span><span id="question-total"> of <span id="remaining">0</span></span>
             </div>
         </div>
 
@@ -494,7 +559,7 @@
             <div id="incorrect-problems-list"></div>
         </div>
 
-        <button class="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
+        <button class="reset-btn" id="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
     </div>
 
     <script>
@@ -506,6 +571,9 @@
         let incorrectCount = 0;
         let incorrectProblems = [];
         let currentProblem = null;
+        let timerMode = false;
+        let timeRemaining = 60;
+        let timerInterval = null;
 
         function selectMode(mode) {
             selectedMode = mode;
@@ -519,6 +587,63 @@
         function updateSliderValue(value) {
             maxNumber = parseInt(value);
             document.getElementById('slider-value').textContent = value;
+            localStorage.setItem('additionSubtraction_maxNumber', value);
+        }
+
+        function toggleTimerMode() {
+            timerMode = document.getElementById('timer-mode').checked;
+            localStorage.setItem('additionSubtraction_timerMode', timerMode);
+        }
+
+        function loadSavedSettings() {
+            // Load max number setting
+            const savedMaxNumber = localStorage.getItem('additionSubtraction_maxNumber');
+            if (savedMaxNumber) {
+                maxNumber = parseInt(savedMaxNumber);
+                document.getElementById('max-number').value = savedMaxNumber;
+                document.getElementById('slider-value').textContent = savedMaxNumber;
+            }
+
+            // Load timer mode setting
+            const savedTimerMode = localStorage.getItem('additionSubtraction_timerMode');
+            if (savedTimerMode === 'true') {
+                timerMode = true;
+                document.getElementById('timer-mode').checked = true;
+            }
+        }
+
+        function startTimer() {
+            timeRemaining = 60;
+            updateTimerDisplay();
+            document.getElementById('timer-display').classList.remove('hidden');
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 10) {
+                    document.getElementById('timer-text').classList.add('warning');
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer-text').textContent =
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
         }
 
         // Generate all addition/subtraction problems based on max number setting
@@ -578,18 +703,38 @@
 
             const allProblems = generateProblems(selectedMode);
             const shuffled = shuffleArray(allProblems);
-            // Limit to 20 random questions
-            shuffledProblems = shuffled.slice(0, 20);
+
+            // In timer mode, use all problems; otherwise limit to 20
+            if (timerMode) {
+                shuffledProblems = shuffled;
+                startTimer();
+            } else {
+                shuffledProblems = shuffled.slice(0, 20);
+            }
+
             currentIndex = 0;
             correctCount = 0;
             incorrectCount = 0;
             incorrectProblems = [];
             updateDisplay();
             showCurrentProblem();
+
+            // Ensure focus works on iOS by giving the element time to render
+            setTimeout(() => {
+                document.getElementById('answer-input').focus();
+            }, 100);
         }
 
         function showCurrentProblem() {
-            if (currentIndex < shuffledProblems.length) {
+            // In timer mode, keep going until time runs out
+            if (timerMode || currentIndex < shuffledProblems.length) {
+                // Reshuffle if we've gone through all problems in timer mode
+                if (timerMode && currentIndex >= shuffledProblems.length) {
+                    const allProblems = generateProblems(selectedMode);
+                    shuffledProblems = shuffleArray(allProblems);
+                    currentIndex = 0;
+                }
+
                 currentProblem = shuffledProblems[currentIndex];
                 document.getElementById('question').textContent =
                     `${currentProblem.num1} ${currentProblem.operator} ${currentProblem.num2} =`;
@@ -651,12 +796,28 @@
             document.getElementById('incorrect').textContent = incorrectCount;
             document.getElementById('total').textContent = correctCount + incorrectCount;
             document.getElementById('current').textContent = currentIndex + 1;
-            document.getElementById('remaining').textContent = shuffledProblems.length;
+
+            // Hide "of X" in timer mode
+            if (timerMode) {
+                document.getElementById('question-total').style.display = 'none';
+            } else {
+                document.getElementById('question-total').style.display = 'inline';
+                document.getElementById('remaining').textContent = shuffledProblems.length;
+            }
         }
 
         function showComplete() {
+            stopTimer();
             document.getElementById('quiz-area').classList.add('hidden');
             document.getElementById('complete-area').classList.remove('hidden');
+            document.getElementById('timer-display').classList.add('hidden');
+
+            // Disable reset button for 3 seconds to prevent accidental clicks
+            const resetBtn = document.getElementById('reset-btn');
+            resetBtn.disabled = true;
+            setTimeout(() => {
+                resetBtn.disabled = false;
+            }, 3000);
 
             const total = correctCount + incorrectCount;
             const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
@@ -689,16 +850,21 @@
         }
 
         function resetQuiz() {
+            stopTimer();
             // Show mode selection
             document.getElementById('mode-selection-area').classList.remove('hidden');
-            // Hide progress, quiz area, and complete area
+            // Hide progress, quiz area, complete area, and timer
             document.getElementById('progress').classList.add('hidden');
             document.getElementById('quiz-area').classList.add('hidden');
             document.getElementById('complete-area').classList.add('hidden');
+            document.getElementById('timer-display').classList.add('hidden');
+            document.getElementById('timer-text').classList.remove('warning');
         }
 
         // Allow Enter key to submit answer
         document.addEventListener('DOMContentLoaded', function() {
+            loadSavedSettings();
+
             document.getElementById('answer-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !document.getElementById('submit-btn').disabled) {
                     submitAnswer();
