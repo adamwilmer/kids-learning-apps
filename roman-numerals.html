@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roman Numerals Practice</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNVM44YVQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KNVM44YVQV');
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+
+            .question {
+                font-size: 2em !important;
+            }
+
+            .question-display {
+                padding: 30px 20px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .progress {
+                padding: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .score {
+                font-size: 1.2em !important;
+            }
+
+            .progress-text {
+                font-size: 1em !important;
+            }
+
+            button {
+                padding: 15px !important;
+                font-size: 1em !important;
+            }
+
+            input {
+                font-size: 1.5em !important;
+                padding: 15px !important;
+            }
+
+            .mode-selection h2 {
+                font-size: 1.2em;
+            }
+
+            .mode-btn {
+                font-size: 1em;
+                padding: 12px 20px;
+            }
+
+            .slider-container {
+                padding: 15px;
+            }
+
+            .slider-container label {
+                font-size: 1em;
+            }
+
+            .slider-value {
+                font-size: 1.2em;
+            }
+        }
+
+        .progress {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .progress-text {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-display {
+            background: #f8f9fa;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 50px 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .question {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            font-size: 2em;
+            text-align: center;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            font-weight: bold;
+            outline: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .answer-input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .answer-input.correct {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .answer-input.incorrect {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .finish-btn {
+            background: #007bff;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .finish-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .reset-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .complete {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .complete h2 {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .complete p {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .incorrect-problems {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .incorrect-problems h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .incorrect-problems ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .incorrect-problems li {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .feedback.correct {
+            color: #28a745;
+        }
+
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+
+        .mode-selection {
+            background: #f8f9fa;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .mode-selection h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .mode-btn.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .start-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            font-size: 1.3em;
+        }
+
+        .start-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .slider-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .slider-container label {
+            display: block;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        .timer-option {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .timer-option label {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .timer-display {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .timer-display .time {
+            font-size: 2em;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .timer-display .time.warning {
+            color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
+
+        .choice-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .choice-btn {
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background: #f0f0ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .choice-btn.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .choice-btn.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 600px) {
+            .choice-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .choice-btn {
+                padding: 15px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Roman Numerals Practice</h1>
+
+        <div id="mode-selection-area" class="mode-selection">
+            <h2>Choose Your Practice Mode</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn selected" onclick="selectMode('roman-to-arabic')">
+                    Roman → Number
+                </button>
+                <button class="mode-btn" onclick="selectMode('arabic-to-roman')">
+                    Number → Roman
+                </button>
+                <button class="mode-btn" onclick="selectMode('both')">
+                    Both
+                </button>
+            </div>
+            <div class="slider-container">
+                <label for="max-number">
+                    Maximum Number: <span class="slider-value" id="slider-value">100</span>
+                </label>
+                <input type="range"
+                       id="max-number"
+                       min="0"
+                       max="4"
+                       step="1"
+                       value="1"
+                       oninput="updateSliderValue(this.value)"
+                       list="tickmarks">
+                <datalist id="tickmarks">
+                    <option value="0" label="10"></option>
+                    <option value="1" label="100"></option>
+                    <option value="2" label="500"></option>
+                    <option value="3" label="1000"></option>
+                    <option value="4" label="2000"></option>
+                </datalist>
+            </div>
+            <div class="timer-option">
+                <input type="checkbox" id="timer-mode" onclick="toggleTimerMode()">
+                <label for="timer-mode">Timed Mode (1 minute)</label>
+            </div>
+            <div class="timer-option">
+                <input type="checkbox" id="multiple-choice-mode" onclick="toggleMultipleChoiceMode()">
+                <label for="multiple-choice-mode">Multiple Choice</label>
+            </div>
+            <button class="start-btn" onclick="startQuizWithMode()">Start Practice</button>
+        </div>
+
+        <div class="timer-display hidden" id="timer-display">
+            <div style="font-size: 1em; color: #856404; margin-bottom: 5px;">Time Remaining</div>
+            <div class="time" id="timer-text">1:00</div>
+        </div>
+
+        <div class="progress hidden" id="progress">
+            <div class="progress-text">Progress</div>
+            <div class="score">
+                <span id="correct">0</span> correct /
+                <span id="incorrect">0</span> incorrect /
+                <span id="total">0</span> total
+            </div>
+            <div style="margin-top: 10px; color: #999;">
+                Question <span id="current">0</span><span id="question-total"> of <span id="remaining">0</span></span>
+            </div>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div class="question-display">
+                <div class="question" id="question"></div>
+                <input type="text"
+                       id="answer-input"
+                       class="answer-input"
+                       placeholder="?"
+                       autocomplete="off"
+                       autofocus>
+                <div id="choice-buttons-container" class="choice-buttons hidden"></div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div class="buttons" id="submit-button-container">
+                <button class="submit-btn" id="submit-btn" onclick="submitAnswer()">Check Answer</button>
+            </div>
+
+            <button class="finish-btn" onclick="finishTest()">Finish Test</button>
+        </div>
+
+        <div id="complete-area" class="complete hidden">
+            <h2>Complete!</h2>
+            <p>Final Score: <span id="final-score"></span></p>
+            <p><span id="final-correct">0</span> correct out of <span id="final-total">0</span></p>
+            <div id="incorrect-problems-list"></div>
+        </div>
+
+        <button class="reset-btn" id="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
+    </div>
+
+    <script>
+        const sliderValues = [10, 100, 500, 1000, 2000];
+        let selectedMode = 'roman-to-arabic';
+        let maxNumber = 100;
+        let shuffledProblems = [];
+        let currentIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let incorrectProblems = [];
+        let currentProblem = null;
+        let timerMode = false;
+        let multipleChoiceMode = false;
+        let timeRemaining = 60;
+        let timerInterval = null;
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            // Update button styles
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function updateSliderValue(value) {
+            const index = parseInt(value);
+            maxNumber = sliderValues[index];
+            document.getElementById('slider-value').textContent = maxNumber;
+            localStorage.setItem('romanNumerals_maxNumber', maxNumber);
+        }
+
+        function toggleTimerMode() {
+            timerMode = document.getElementById('timer-mode').checked;
+            localStorage.setItem('romanNumerals_timerMode', timerMode);
+        }
+
+        function toggleMultipleChoiceMode() {
+            multipleChoiceMode = document.getElementById('multiple-choice-mode').checked;
+            localStorage.setItem('romanNumerals_multipleChoiceMode', multipleChoiceMode);
+        }
+
+        function loadSavedSettings() {
+            // Load max number setting
+            const savedMaxNumber = localStorage.getItem('romanNumerals_maxNumber');
+            if (savedMaxNumber) {
+                maxNumber = parseInt(savedMaxNumber);
+                const index = sliderValues.indexOf(maxNumber);
+                if (index !== -1) {
+                    document.getElementById('max-number').value = index;
+                    document.getElementById('slider-value').textContent = maxNumber;
+                }
+            }
+
+            // Load timer mode setting
+            const savedTimerMode = localStorage.getItem('romanNumerals_timerMode');
+            if (savedTimerMode === 'true') {
+                timerMode = true;
+                document.getElementById('timer-mode').checked = true;
+            }
+
+            // Load multiple choice mode setting
+            const savedMultipleChoiceMode = localStorage.getItem('romanNumerals_multipleChoiceMode');
+            if (savedMultipleChoiceMode === 'true') {
+                multipleChoiceMode = true;
+                document.getElementById('multiple-choice-mode').checked = true;
+            }
+        }
+
+        function startTimer() {
+            timeRemaining = 60;
+            updateTimerDisplay();
+            document.getElementById('timer-display').classList.remove('hidden');
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 10) {
+                    document.getElementById('timer-text').classList.add('warning');
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer-text').textContent =
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        // Convert Arabic to Roman
+        function arabicToRoman(num) {
+            const values = [
+                1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1
+            ];
+            const numerals = [
+                'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'
+            ];
+
+            let result = '';
+            for (let i = 0; i < values.length; i++) {
+                while (num >= values[i]) {
+                    result += numerals[i];
+                    num -= values[i];
+                }
+            }
+            return result;
+        }
+
+        // Convert Roman to Arabic
+        function romanToArabic(roman) {
+            const romanNumerals = {
+                'I': 1, 'V': 5, 'X': 10, 'L': 50,
+                'C': 100, 'D': 500, 'M': 1000
+            };
+
+            let result = 0;
+            for (let i = 0; i < roman.length; i++) {
+                const current = romanNumerals[roman[i]];
+                const next = romanNumerals[roman[i + 1]];
+
+                if (next && current < next) {
+                    result -= current;
+                } else {
+                    result += current;
+                }
+            }
+            return result;
+        }
+
+        // Generate 3 wrong answers that are plausible
+        function generateWrongAnswers(correctAnswer, type) {
+            const wrongAnswers = new Set();
+
+            if (type === 'roman-to-arabic') {
+                // Correct answer is a number, generate similar numbers
+                const correctNum = parseInt(correctAnswer);
+                const offsets = [1, 2, 5, 10, 20, 50, 100];
+
+                while (wrongAnswers.size < 3) {
+                    const offset = offsets[Math.floor(Math.random() * offsets.length)];
+                    const sign = Math.random() < 0.5 ? 1 : -1;
+                    const wrongNum = correctNum + (offset * sign);
+
+                    if (wrongNum > 0 && wrongNum <= maxNumber && wrongNum !== correctNum) {
+                        wrongAnswers.add(wrongNum.toString());
+                    }
+                }
+            } else {
+                // Correct answer is Roman, generate similar Roman numerals
+                const correctNum = romanToArabic(correctAnswer);
+                const offsets = [1, 2, 5, 10, 20, 50, 100];
+
+                while (wrongAnswers.size < 3) {
+                    const offset = offsets[Math.floor(Math.random() * offsets.length)];
+                    const sign = Math.random() < 0.5 ? 1 : -1;
+                    const wrongNum = correctNum + (offset * sign);
+
+                    if (wrongNum > 0 && wrongNum <= maxNumber && wrongNum !== correctNum) {
+                        wrongAnswers.add(arabicToRoman(wrongNum));
+                    }
+                }
+            }
+
+            return Array.from(wrongAnswers);
+        }
+
+        // Generate all problems based on max number setting
+        function generateProblems(mode) {
+            const problems = [];
+
+            // Generate Roman to Arabic problems
+            if (mode === 'roman-to-arabic' || mode === 'both') {
+                for (let i = 1; i <= maxNumber; i++) {
+                    problems.push({
+                        number: i,
+                        roman: arabicToRoman(i),
+                        question: arabicToRoman(i),
+                        answer: i.toString(),
+                        type: 'roman-to-arabic'
+                    });
+                }
+            }
+
+            // Generate Arabic to Roman problems
+            if (mode === 'arabic-to-roman' || mode === 'both') {
+                for (let i = 1; i <= maxNumber; i++) {
+                    problems.push({
+                        number: i,
+                        roman: arabicToRoman(i),
+                        question: i.toString(),
+                        answer: arabicToRoman(i),
+                        type: 'arabic-to-roman'
+                    });
+                }
+            }
+
+            return problems;
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function startQuizWithMode() {
+            // Hide mode selection
+            document.getElementById('mode-selection-area').classList.add('hidden');
+            // Show progress and quiz area
+            document.getElementById('progress').classList.remove('hidden');
+            document.getElementById('quiz-area').classList.remove('hidden');
+
+            const allProblems = generateProblems(selectedMode);
+            const shuffled = shuffleArray(allProblems);
+
+            // In timer mode, use all problems; otherwise limit to 20
+            if (timerMode) {
+                shuffledProblems = shuffled;
+                startTimer();
+            } else {
+                shuffledProblems = shuffled.slice(0, 20);
+            }
+
+            currentIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            incorrectProblems = [];
+            updateDisplay();
+            showCurrentProblem();
+
+            // Track quiz start
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_start', {
+                    activity: 'roman-numerals',
+                    mode: selectedMode,
+                    max_number: maxNumber,
+                    timer_mode: timerMode,
+                    multiple_choice_mode: multipleChoiceMode,
+                    total_questions: timerMode ? 'unlimited' : 20
+                });
+            }
+
+            // Ensure focus works on iOS by giving the element time to render (only for text input mode)
+            if (!multipleChoiceMode) {
+                setTimeout(() => {
+                    document.getElementById('answer-input').focus();
+                }, 100);
+            }
+        }
+
+        function showCurrentProblem() {
+            // In timer mode, keep going until time runs out
+            if (timerMode || currentIndex < shuffledProblems.length) {
+                // Reshuffle if we've gone through all problems in timer mode
+                if (timerMode && currentIndex >= shuffledProblems.length) {
+                    const allProblems = generateProblems(selectedMode);
+                    shuffledProblems = shuffleArray(allProblems);
+                    currentIndex = 0;
+                }
+
+                currentProblem = shuffledProblems[currentIndex];
+                document.getElementById('question').textContent = currentProblem.question;
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('feedback').className = 'feedback';
+
+                if (multipleChoiceMode) {
+                    // Hide text input, show multiple choice buttons
+                    document.getElementById('answer-input').classList.add('hidden');
+                    document.getElementById('submit-button-container').classList.add('hidden');
+
+                    const choiceContainer = document.getElementById('choice-buttons-container');
+                    choiceContainer.classList.remove('hidden');
+
+                    // Generate choices
+                    const wrongAnswers = generateWrongAnswers(currentProblem.answer, currentProblem.type);
+                    const allChoices = [currentProblem.answer, ...wrongAnswers];
+
+                    // Shuffle choices
+                    const shuffledChoices = shuffleArray(allChoices);
+
+                    // Create buttons
+                    choiceContainer.innerHTML = '';
+                    shuffledChoices.forEach(choice => {
+                        const button = document.createElement('button');
+                        button.className = 'choice-btn';
+                        button.textContent = choice;
+                        button.onclick = () => selectMultipleChoice(choice);
+                        choiceContainer.appendChild(button);
+                    });
+                } else {
+                    // Show text input, hide multiple choice buttons
+                    document.getElementById('answer-input').classList.remove('hidden');
+                    document.getElementById('submit-button-container').classList.remove('hidden');
+                    document.getElementById('choice-buttons-container').classList.add('hidden');
+
+                    document.getElementById('answer-input').value = '';
+                    document.getElementById('answer-input').className = 'answer-input';
+                    document.getElementById('submit-btn').disabled = false;
+                    document.getElementById('answer-input').focus();
+                }
+
+                document.getElementById('quiz-area').classList.remove('hidden');
+                document.getElementById('complete-area').classList.add('hidden');
+            } else {
+                showComplete();
+            }
+        }
+
+        function selectMultipleChoice(selectedAnswer) {
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+            const correctAnswer = currentProblem.answer.toUpperCase();
+            const selectedUpper = selectedAnswer.toUpperCase();
+            const feedbackElement = document.getElementById('feedback');
+
+            // Disable all buttons
+            choiceButtons.forEach(btn => {
+                btn.disabled = true;
+                const btnAnswer = btn.textContent.toUpperCase();
+
+                if (btnAnswer === correctAnswer) {
+                    btn.classList.add('correct');
+                }
+                if (btnAnswer === selectedUpper && btnAnswer !== correctAnswer) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const isCorrect = selectedUpper === correctAnswer;
+
+            if (isCorrect) {
+                correctCount++;
+                feedbackElement.textContent = '✓ Correct!';
+                feedbackElement.className = 'feedback correct';
+            } else {
+                incorrectCount++;
+                feedbackElement.textContent = `✗ Incorrect. The answer is ${currentProblem.answer}`;
+                feedbackElement.className = 'feedback incorrect';
+                incorrectProblems.push({
+                    question: currentProblem.question,
+                    correctAnswer: currentProblem.answer,
+                    userAnswer: selectedAnswer,
+                    type: currentProblem.type
+                });
+            }
+
+            currentIndex++;
+            updateDisplay();
+
+            // Move to next problem after a short delay
+            setTimeout(() => {
+                showCurrentProblem();
+            }, 1500);
+        }
+
+        function submitAnswer() {
+            const userAnswer = document.getElementById('answer-input').value.trim().toUpperCase();
+            const inputElement = document.getElementById('answer-input');
+            const feedbackElement = document.getElementById('feedback');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (!userAnswer) {
+                feedbackElement.textContent = 'Please enter an answer!';
+                feedbackElement.className = 'feedback incorrect';
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            const correctAnswer = currentProblem.answer.toUpperCase();
+            const isCorrect = userAnswer === correctAnswer;
+
+            if (isCorrect) {
+                correctCount++;
+                inputElement.className = 'answer-input correct';
+                feedbackElement.textContent = '✓ Correct!';
+                feedbackElement.className = 'feedback correct';
+            } else {
+                incorrectCount++;
+                inputElement.className = 'answer-input incorrect';
+                feedbackElement.textContent = `✗ Incorrect. The answer is ${currentProblem.answer}`;
+                feedbackElement.className = 'feedback incorrect';
+                incorrectProblems.push({
+                    question: currentProblem.question,
+                    correctAnswer: currentProblem.answer,
+                    userAnswer: userAnswer,
+                    type: currentProblem.type
+                });
+            }
+
+            currentIndex++;
+            updateDisplay();
+
+            // Move to next problem after a short delay
+            setTimeout(() => {
+                showCurrentProblem();
+            }, 1500);
+        }
+
+        function updateDisplay() {
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('incorrect').textContent = incorrectCount;
+            document.getElementById('total').textContent = correctCount + incorrectCount;
+            document.getElementById('current').textContent = currentIndex + 1;
+
+            // Hide "of X" in timer mode
+            if (timerMode) {
+                document.getElementById('question-total').style.display = 'none';
+            } else {
+                document.getElementById('question-total').style.display = 'inline';
+                document.getElementById('remaining').textContent = shuffledProblems.length;
+            }
+        }
+
+        function showComplete() {
+            stopTimer();
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('complete-area').classList.remove('hidden');
+            document.getElementById('timer-display').classList.add('hidden');
+
+            // Disable reset button for 3 seconds to prevent accidental clicks
+            const resetBtn = document.getElementById('reset-btn');
+            resetBtn.disabled = true;
+            setTimeout(() => {
+                resetBtn.disabled = false;
+            }, 3000);
+
+            const total = correctCount + incorrectCount;
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            document.getElementById('final-score').textContent = percentage + '%';
+            document.getElementById('final-correct').textContent = correctCount;
+            document.getElementById('final-total').textContent = total;
+
+            // Track quiz completion
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_complete', {
+                    activity: 'roman-numerals',
+                    mode: selectedMode,
+                    max_number: maxNumber,
+                    timer_mode: timerMode,
+                    multiple_choice_mode: multipleChoiceMode,
+                    score_percentage: percentage,
+                    correct_count: correctCount,
+                    incorrect_count: incorrectCount,
+                    total_questions: total
+                });
+            }
+
+            // Display incorrect problems list
+            const incorrectProblemsDiv = document.getElementById('incorrect-problems-list');
+            if (incorrectProblems.length > 0) {
+                const html = `
+                    <div class="incorrect-problems">
+                        <h3>Problems to Practise</h3>
+                        <ul>
+                            ${incorrectProblems.map(p =>
+                                `<li>${p.question} = ${p.correctAnswer} <span style="color: #dc3545;">(you answered: ${p.userAnswer})</span></li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                `;
+                incorrectProblemsDiv.innerHTML = html;
+            } else {
+                incorrectProblemsDiv.innerHTML = '<p style="margin-top: 20px; color: #28a745; font-weight: bold;">Perfect! No mistakes!</p>';
+            }
+        }
+
+        function finishTest() {
+            showComplete();
+        }
+
+        function resetQuiz() {
+            stopTimer();
+            // Show mode selection
+            document.getElementById('mode-selection-area').classList.remove('hidden');
+            // Hide progress, quiz area, complete area, and timer
+            document.getElementById('progress').classList.add('hidden');
+            document.getElementById('quiz-area').classList.add('hidden');
+            document.getElementById('complete-area').classList.add('hidden');
+            document.getElementById('timer-display').classList.add('hidden');
+            document.getElementById('timer-text').classList.remove('warning');
+        }
+
+        // Allow Enter key to submit answer
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedSettings();
+
+            document.getElementById('answer-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !document.getElementById('submit-btn').disabled) {
+                    submitAnswer();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
