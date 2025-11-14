@@ -761,6 +761,7 @@
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'quiz_start', {
                     activity: 'spelling-bee',
+                    mode: quizMode,
                     word_set: selectedWordSet,
                     total_words: shuffledWords.length
                 });
@@ -882,6 +883,7 @@
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'quiz_complete', {
                     activity: 'spelling-bee',
+                    mode: quizMode,
                     score_percentage: percentage,
                     correct_count: correctCount,
                     incorrect_count: incorrectCount,

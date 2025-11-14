@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Capital Cities Quiz</title>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KNVM44YVQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KNVM44YVQV');
+    </script>
     <style>
         * {
             margin: 0;
@@ -736,6 +744,17 @@
             document.getElementById('modeSelection').style.display = 'none';
             document.getElementById('quizContainer').style.display = 'block';
 
+            // Track quiz start
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_start', {
+                    activity: 'capital-cities',
+                    difficulty: selectedDifficulty,
+                    answer_type: selectedAnswerType,
+                    question_type: selectedQuestionType,
+                    total_questions: currentQuestions.length
+                });
+            }
+
             showQuestion();
         }
 
@@ -951,6 +970,20 @@
                 message = 'Nice try! Keep learning!';
             }
             document.getElementById('message').textContent = message;
+
+            // Track quiz completion
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_complete', {
+                    activity: 'capital-cities',
+                    difficulty: selectedDifficulty,
+                    answer_type: selectedAnswerType,
+                    question_type: selectedQuestionType,
+                    score_percentage: percentage,
+                    correct_count: correctCount,
+                    incorrect_count: incorrectCount,
+                    total_questions: total
+                });
+            }
 
             // Show review section
             const reviewSection = document.getElementById('reviewSection');

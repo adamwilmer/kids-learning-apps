@@ -85,3 +85,11 @@ Simply open any HTML file directly in a web browser. No server or build process 
 4. **Accessibility** - Ensure sufficient colour contrast and keyboard navigation works
 5. **Mobile-first** - Test all changes at 600px width and below
 6. **UK English spellings** - Always use UK English spellings (e.g., "colour" not "color", "practise" not "practice" as a verb, "recognise" not "recognize")
+
+## Git Conventions
+
+### Commit Messages
+- **NEVER include Claude Code references** - Do not add "Generated with Claude Code" or "Co-Authored-By: Claude" footers to commit messages
+- Use clear, descriptive commit messages in imperative mood (e.g., "Add feature" not "Added feature")
+- List bullet points for multiple changes
+- Keep commit messages professional and concise
