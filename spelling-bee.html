@@ -147,6 +147,11 @@
                 min-width: 200px;
                 font-size: 0.9em;
             }
+
+            .example-sentence {
+                font-size: 1em;
+                padding: 12px 15px;
+            }
         }
 
         .progress {
@@ -454,6 +459,21 @@
             color: #dc3545;
         }
 
+        .example-sentence {
+            background: #fff4e6;
+            border: 2px solid #ffa726;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .example-sentence strong {
+            color: #f57c00;
+        }
+
         .home-link {
             position: fixed;
             top: 20px;
@@ -532,6 +552,10 @@
 
         <!-- 1-Person Mode Quiz -->
         <div id="quiz-area-one-person" class="hidden">
+            <div id="example-sentence-container" class="example-sentence hidden">
+                <strong>Example:</strong> <span id="example-sentence-text"></span>
+            </div>
+
             <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
                 <button class="speak-btn" onclick="speakWord()" title="Hear word again" style="position: static; margin-bottom: 20px;">🔊</button>
                 <input type="text" class="spelling-input" id="spelling-input" placeholder="Type the word here" autocomplete="off">
@@ -584,7 +608,16 @@
                     "crawl", "August", "dinosaur", "chair", "year", "wear", "share", "family",
                     "elephant", "skin", "unhappy", "undo", "playground", "said", "come", "was",
                     "your", "where", "love", "some", "ask", "friend", "school", "house"
-                ]
+                ],
+                examples: {
+                    "wear": "I wear my coat when it's cold.",
+                    "where": "Where is my book?",
+                    "your": "Is this your pencil?",
+                    "read": "I like to read books.",
+                    "year": "I am seven years old this year.",
+                    "blue": "The sky is blue.",
+                    "would": "I would like some cake."
+                }
             },
             'finals': {
                 title: 'ETSP Spelling Bee Finals - Additional Words',
@@ -601,7 +634,19 @@
                     "every", "everybody", "great", "pretty", "beautiful", "after", "father", "class",
                     "grass", "hour", "improve", "sugar", "could", "should", "would", "whole",
                     "many", "clothes", "busy", "people", "again", "half", "parents", "Christmas"
-                ]
+                ],
+                examples: {
+                    "there": "Put the book over there.",
+                    "quite": "It is quite cold today.",
+                    "quiet": "Please be quiet in the library.",
+                    "hour": "It takes one hour to drive there.",
+                    "would": "I would like some cake.",
+                    "could": "I could see the bird in the tree.",
+                    "should": "You should brush your teeth.",
+                    "whole": "I ate the whole apple.",
+                    "great": "You did a great job!",
+                    "most": "Most of the children are here."
+                }
             }
         };
 
@@ -718,6 +763,18 @@
                     document.getElementById('spelling-input').value = '';
                     document.getElementById('feedback').textContent = '';
                     document.getElementById('feedback').className = 'feedback';
+
+                    // Check if this word has an example sentence
+                    const examples = wordSets[selectedWordSet].examples || {};
+                    const exampleSentence = examples[currentWord];
+
+                    if (exampleSentence) {
+                        document.getElementById('example-sentence-container').classList.remove('hidden');
+                        document.getElementById('example-sentence-text').textContent = exampleSentence;
+                    } else {
+                        document.getElementById('example-sentence-container').classList.add('hidden');
+                    }
+
                     document.getElementById('spelling-input').focus();
                 } else {
                     // 2-person mode: show the word
