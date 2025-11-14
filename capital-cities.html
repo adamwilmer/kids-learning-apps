@@ -350,6 +350,67 @@
             display: none;
         }
 
+        .slider-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .slider-container label {
+            display: block;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #764ba2;
+            transform: scale(1.2);
+        }
+
         .home-link {
             position: fixed;
             top: 20px;
@@ -409,6 +470,18 @@
                 font-size: 2em;
             }
 
+            .slider-container {
+                padding: 15px;
+            }
+
+            .slider-container label {
+                font-size: 1em;
+            }
+
+            .slider-value {
+                font-size: 1.2em;
+            }
+
             .home-link {
                 top: 10px;
                 left: 10px;
@@ -426,12 +499,18 @@
         <!-- Mode Selection Screen -->
         <div class="mode-selection" id="modeSelection">
             <div class="mode-group">
-                <h2>Select Difficulty</h2>
-                <div class="button-group">
-                    <button onclick="selectDifficulty('easy')">Easy</button>
-                    <button onclick="selectDifficulty('medium')">Medium</button>
-                    <button onclick="selectDifficulty('difficult')">Difficult</button>
-                    <button onclick="selectDifficulty('very-difficult')">Very Difficult</button>
+                <h2>Difficulty</h2>
+                <div class="slider-container">
+                    <label for="difficulty-slider">
+                        Level: <span class="slider-value" id="difficulty-value">Medium</span>
+                    </label>
+                    <input type="range"
+                           id="difficulty-slider"
+                           min="0"
+                           max="3"
+                           step="1"
+                           value="1"
+                           oninput="updateDifficultySlider(this.value)">
                 </div>
             </div>
 
@@ -741,13 +820,14 @@
         let incorrectItems = [];
 
         // Mode selection functions
-        function selectDifficulty(difficulty) {
-            selectedDifficulty = difficulty;
-            localStorage.setItem('capitalCities_difficulty', difficulty);
-            document.querySelectorAll('.mode-group:nth-child(1) button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
+        const difficultyLevels = ['easy', 'medium', 'difficult', 'very-difficult'];
+        const difficultyLabels = ['Easy', 'Medium', 'Difficult', 'Very Difficult'];
+
+        function updateDifficultySlider(value) {
+            const index = parseInt(value);
+            selectedDifficulty = difficultyLevels[index];
+            document.getElementById('difficulty-value').textContent = difficultyLabels[index];
+            localStorage.setItem('capitalCities_difficulty', selectedDifficulty);
             checkStartButton();
         }
 
@@ -783,13 +863,16 @@
             const savedDifficulty = localStorage.getItem('capitalCities_difficulty');
             if (savedDifficulty) {
                 selectedDifficulty = savedDifficulty;
-                // Find and select the correct button
-                const difficultyButtons = document.querySelectorAll('.mode-group:nth-child(1) button');
-                difficultyButtons.forEach(btn => {
-                    if (btn.textContent.toLowerCase() === savedDifficulty) {
-                        btn.classList.add('selected');
-                    }
-                });
+                const index = difficultyLevels.indexOf(savedDifficulty);
+                if (index !== -1) {
+                    document.getElementById('difficulty-slider').value = index;
+                    document.getElementById('difficulty-value').textContent = difficultyLabels[index];
+                }
+            } else {
+                // Set default to medium (index 1)
+                selectedDifficulty = 'medium';
+                document.getElementById('difficulty-slider').value = 1;
+                document.getElementById('difficulty-value').textContent = 'Medium';
             }
 
             // Load saved answer type
