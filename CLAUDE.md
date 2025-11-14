@@ -82,5 +82,6 @@ Simply open any HTML file directly in a web browser. No server or build process 
 1. **Maintain single-file architecture** - Never split into separate CSS/JS files
 2. **No external dependencies** - No CDN links, npm packages, or build tools
 3. **Child-friendly design** - Large fonts, clear buttons, encouraging language
-4. **Accessibility** - Ensure sufficient color contrast and keyboard navigation works
+4. **Accessibility** - Ensure sufficient colour contrast and keyboard navigation works
 5. **Mobile-first** - Test all changes at 600px width and below
+6. **UK English spellings** - Always use UK English spellings (e.g., "colour" not "color", "practise" not "practice" as a verb, "recognise" not "recognize")
