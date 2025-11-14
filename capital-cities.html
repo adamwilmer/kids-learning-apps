@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Cities Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .mode-selection {
+            text-align: center;
+        }
+
+        .mode-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+        }
+
+        .mode-group h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button.selected {
+            background: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .start-button {
+            margin-top: 20px;
+            padding: 20px 40px;
+            font-size: 1.3em;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .quiz-container .finish-btn {
+            display: block;
+        }
+
+        .mode-selection ~ .reset-btn {
+            margin-top: 20px;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+        }
+
+        .progress-item {
+            text-align: center;
+        }
+
+        .progress-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .progress-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .question-card {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .country-name {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .continent-badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.3em;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2);
+        }
+
+        .choices {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .choice-button {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1em;
+            background: white;
+            color: #333;
+            border: 3px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .choice-button:hover:not(:disabled) {
+            background: #f8f9ff;
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .choice-button:disabled {
+            cursor: not-allowed;
+        }
+
+        .choice-button.correct {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .choice-button.incorrect {
+            background: #f44336;
+            border-color: #f44336;
+            color: white;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #4caf50;
+            color: white;
+        }
+
+        .feedback.incorrect {
+            background: #f44336;
+            color: white;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2em;
+            background: #28a745;
+            color: white;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .submit-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .finish-btn {
+            background: #007bff;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        .finish-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .complete-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score {
+            font-size: 3em;
+            color: #667eea;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .review-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .review-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .review-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .review-country {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .review-capital {
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .home-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .question-text {
+                font-size: 1.3em;
+            }
+
+            .country-name {
+                font-size: 1.6em;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+
+            .choice-button {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .submit-button {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .score {
+                font-size: 2em;
+            }
+
+            .home-link {
+                top: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link">← Home</a>
+    <div class="container">
+        <h1>🌍 Capital Cities Quiz</h1>
+
+        <!-- Mode Selection Screen -->
+        <div class="mode-selection" id="modeSelection">
+            <div class="mode-group">
+                <h2>Select Difficulty</h2>
+                <div class="button-group">
+                    <button onclick="selectDifficulty('easy')">Easy</button>
+                    <button onclick="selectDifficulty('medium')">Medium</button>
+                    <button onclick="selectDifficulty('difficult')">Difficult</button>
+                </div>
+            </div>
+
+            <div class="mode-group">
+                <h2>Answer Type</h2>
+                <div class="button-group">
+                    <button onclick="selectAnswerType('multiple-choice')">Multiple Choice</button>
+                    <button onclick="selectAnswerType('free-text')">Free Text</button>
+                </div>
+            </div>
+
+            <div class="mode-group">
+                <h2>Question Type</h2>
+                <div class="button-group">
+                    <button onclick="selectQuestionType('country-to-capital')">Capital from Country</button>
+                    <button onclick="selectQuestionType('capital-to-country')">Country from Capital</button>
+                </div>
+            </div>
+
+            <button class="start-button" onclick="startQuiz()" id="startButton" disabled>Start Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="progress">
+                <div class="progress-item">
+                    <div class="progress-number" id="correctCount">0</div>
+                    <div class="progress-label">Correct</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-number" id="incorrectCount">0</div>
+                    <div class="progress-label">Incorrect</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-number" id="totalCount">0</div>
+                    <div class="progress-label">Total</div>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text" id="questionText">What is the capital city of</div>
+                <div class="country-name" id="countryName"></div>
+                <div class="continent-badge" id="continentBadge"></div>
+            </div>
+
+            <!-- Multiple Choice -->
+            <div id="multipleChoiceContainer" class="hidden">
+                <div class="choices" id="choices"></div>
+            </div>
+
+            <!-- Free Text -->
+            <div id="freeTextContainer" class="hidden">
+                <input type="text" id="answerInput" class="answer-input" placeholder="Type your answer..." autocomplete="off">
+                <button class="submit-button" onclick="submitFreeText()" id="submitButton">Submit Answer</button>
+            </div>
+
+            <!-- Feedback -->
+            <div id="feedbackContainer" class="hidden">
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <button class="finish-btn" onclick="finishTest()">Finish Test</button>
+            <button class="reset-btn" id="resetButtonQuiz" onclick="resetQuiz()">Reset Test</button>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="complete-screen" id="completeScreen">
+            <h2>Quiz Complete!</h2>
+            <div class="score" id="finalScore"></div>
+            <div class="message" id="message"></div>
+
+            <div class="review-section" id="reviewSection">
+                <h3>Countries to Practise:</h3>
+                <div id="reviewList"></div>
+            </div>
+
+            <button class="reset-btn" id="resetButtonComplete" onclick="resetQuiz()">Reset Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Capital Cities Data
+        const capitalCitiesData = [
+            // Europe
+            { country: "United Kingdom", capital: "London", continent: "Europe", difficulty: "easy" },
+            { country: "France", capital: "Paris", continent: "Europe", difficulty: "easy" },
+            { country: "Germany", capital: "Berlin", continent: "Europe", difficulty: "easy" },
+            { country: "Italy", capital: "Rome", continent: "Europe", difficulty: "easy" },
+            { country: "Spain", capital: "Madrid", continent: "Europe", difficulty: "medium" },
+            { country: "Portugal", capital: "Lisbon", continent: "Europe", difficulty: "medium" },
+            { country: "Netherlands", capital: "Amsterdam", continent: "Europe", difficulty: "medium" },
+            { country: "Belgium", capital: "Brussels", continent: "Europe", difficulty: "medium" },
+            { country: "Greece", capital: "Athens", continent: "Europe", difficulty: "easy" },
+            { country: "Poland", capital: "Warsaw", continent: "Europe", difficulty: "medium" },
+            { country: "Russia", capital: "Moscow", continent: "Europe", difficulty: "easy" },
+            { country: "Sweden", capital: "Stockholm", continent: "Europe", difficulty: "medium" },
+            { country: "Norway", capital: "Oslo", continent: "Europe", difficulty: "medium" },
+            { country: "Denmark", capital: "Copenhagen", continent: "Europe", difficulty: "medium" },
+            { country: "Finland", capital: "Helsinki", continent: "Europe", difficulty: "medium" },
+            { country: "Ireland", capital: "Dublin", continent: "Europe", difficulty: "medium" },
+            { country: "Switzerland", capital: "Bern", continent: "Europe", difficulty: "difficult" },
+            { country: "Austria", capital: "Vienna", continent: "Europe", difficulty: "medium" },
+            { country: "Czech Republic", capital: "Prague", continent: "Europe", difficulty: "medium" },
+            { country: "Hungary", capital: "Budapest", continent: "Europe", difficulty: "medium" },
+            { country: "Romania", capital: "Bucharest", continent: "Europe", difficulty: "difficult" },
+            { country: "Ukraine", capital: "Kyiv", continent: "Europe", difficulty: "medium" },
+            { country: "Turkey", capital: "Ankara", continent: "Europe", difficulty: "difficult" },
+            { country: "Iceland", capital: "Reykjavik", continent: "Europe", difficulty: "medium" },
+
+            // Asia
+            { country: "China", capital: "Beijing", continent: "Asia", difficulty: "easy" },
+            { country: "Japan", capital: "Tokyo", continent: "Asia", difficulty: "easy" },
+            { country: "India", capital: "New Delhi", continent: "Asia", difficulty: "medium" },
+            { country: "South Korea", capital: "Seoul", continent: "Asia", difficulty: "medium" },
+            { country: "Thailand", capital: "Bangkok", continent: "Asia", difficulty: "medium" },
+            { country: "Vietnam", capital: "Hanoi", continent: "Asia", difficulty: "difficult" },
+            { country: "Indonesia", capital: "Jakarta", continent: "Asia", difficulty: "difficult" },
+            { country: "Malaysia", capital: "Kuala Lumpur", continent: "Asia", difficulty: "medium" },
+            { country: "Singapore", capital: "Singapore", continent: "Asia", difficulty: "easy" },
+            { country: "Philippines", capital: "Manila", continent: "Asia", difficulty: "medium" },
+            { country: "Pakistan", capital: "Islamabad", continent: "Asia", difficulty: "difficult" },
+            { country: "Bangladesh", capital: "Dhaka", continent: "Asia", difficulty: "difficult" },
+            { country: "Afghanistan", capital: "Kabul", continent: "Asia", difficulty: "medium" },
+            { country: "Iran", capital: "Tehran", continent: "Asia", difficulty: "medium" },
+            { country: "Iraq", capital: "Baghdad", continent: "Asia", difficulty: "medium" },
+            { country: "Saudi Arabia", capital: "Riyadh", continent: "Asia", difficulty: "difficult" },
+            { country: "Israel", capital: "Jerusalem", continent: "Asia", difficulty: "medium" },
+            { country: "United Arab Emirates", capital: "Abu Dhabi", continent: "Asia", difficulty: "difficult" },
+            { country: "Nepal", capital: "Kathmandu", continent: "Asia", difficulty: "medium" },
+            { country: "Sri Lanka", capital: "Colombo", continent: "Asia", difficulty: "difficult" },
+            { country: "Myanmar", capital: "Naypyidaw", continent: "Asia", difficulty: "difficult" },
+            { country: "Cambodia", capital: "Phnom Penh", continent: "Asia", difficulty: "difficult" },
+            { country: "Laos", capital: "Vientiane", continent: "Asia", difficulty: "difficult" },
+            { country: "Mongolia", capital: "Ulaanbaatar", continent: "Asia", difficulty: "difficult" },
+            { country: "North Korea", capital: "Pyongyang", continent: "Asia", difficulty: "medium" },
+
+            // Africa
+            { country: "Egypt", capital: "Cairo", continent: "Africa", difficulty: "easy" },
+            { country: "South Africa", capital: "Pretoria", continent: "Africa", difficulty: "difficult" },
+            { country: "Nigeria", capital: "Abuja", continent: "Africa", difficulty: "difficult" },
+            { country: "Kenya", capital: "Nairobi", continent: "Africa", difficulty: "medium" },
+            { country: "Ethiopia", capital: "Addis Ababa", continent: "Africa", difficulty: "difficult" },
+            { country: "Morocco", capital: "Rabat", continent: "Africa", difficulty: "difficult" },
+            { country: "Algeria", capital: "Algiers", continent: "Africa", difficulty: "difficult" },
+            { country: "Tunisia", capital: "Tunis", continent: "Africa", difficulty: "medium" },
+            { country: "Libya", capital: "Tripoli", continent: "Africa", difficulty: "medium" },
+            { country: "Sudan", capital: "Khartoum", continent: "Africa", difficulty: "difficult" },
+            { country: "Ghana", capital: "Accra", continent: "Africa", difficulty: "difficult" },
+            { country: "Tanzania", capital: "Dodoma", continent: "Africa", difficulty: "difficult" },
+            { country: "Uganda", capital: "Kampala", continent: "Africa", difficulty: "difficult" },
+            { country: "Zimbabwe", capital: "Harare", continent: "Africa", difficulty: "difficult" },
+            { country: "Zambia", capital: "Lusaka", continent: "Africa", difficulty: "difficult" },
+            { country: "Senegal", capital: "Dakar", continent: "Africa", difficulty: "difficult" },
+            { country: "Angola", capital: "Luanda", continent: "Africa", difficulty: "difficult" },
+            { country: "Mozambique", capital: "Maputo", continent: "Africa", difficulty: "difficult" },
+            { country: "Madagascar", capital: "Antananarivo", continent: "Africa", difficulty: "difficult" },
+            { country: "Cameroon", capital: "Yaoundé", continent: "Africa", difficulty: "difficult" },
+
+            // North America
+            { country: "United States", capital: "Washington, D.C.", continent: "North America", difficulty: "easy" },
+            { country: "Canada", capital: "Ottawa", continent: "North America", difficulty: "medium" },
+            { country: "Mexico", capital: "Mexico City", continent: "North America", difficulty: "easy" },
+            { country: "Cuba", capital: "Havana", continent: "North America", difficulty: "medium" },
+            { country: "Jamaica", capital: "Kingston", continent: "North America", difficulty: "difficult" },
+            { country: "Haiti", capital: "Port-au-Prince", continent: "North America", difficulty: "difficult" },
+            { country: "Dominican Republic", capital: "Santo Domingo", continent: "North America", difficulty: "difficult" },
+            { country: "Guatemala", capital: "Guatemala City", continent: "North America", difficulty: "medium" },
+            { country: "Honduras", capital: "Tegucigalpa", continent: "North America", difficulty: "difficult" },
+            { country: "Nicaragua", capital: "Managua", continent: "North America", difficulty: "difficult" },
+            { country: "Costa Rica", capital: "San José", continent: "North America", difficulty: "medium" },
+            { country: "Panama", capital: "Panama City", continent: "North America", difficulty: "medium" },
+
+            // South America
+            { country: "Brazil", capital: "Brasília", continent: "South America", difficulty: "medium" },
+            { country: "Argentina", capital: "Buenos Aires", continent: "South America", difficulty: "medium" },
+            { country: "Chile", capital: "Santiago", continent: "South America", difficulty: "medium" },
+            { country: "Peru", capital: "Lima", continent: "South America", difficulty: "medium" },
+            { country: "Colombia", capital: "Bogotá", continent: "South America", difficulty: "medium" },
+            { country: "Venezuela", capital: "Caracas", continent: "South America", difficulty: "difficult" },
+            { country: "Ecuador", capital: "Quito", continent: "South America", difficulty: "difficult" },
+            { country: "Bolivia", capital: "La Paz", continent: "South America", difficulty: "difficult" },
+            { country: "Paraguay", capital: "Asunción", continent: "South America", difficulty: "difficult" },
+            { country: "Uruguay", capital: "Montevideo", continent: "South America", difficulty: "difficult" },
+            { country: "Guyana", capital: "Georgetown", continent: "South America", difficulty: "difficult" },
+            { country: "Suriname", capital: "Paramaribo", continent: "South America", difficulty: "difficult" },
+
+            // Oceania
+            { country: "Australia", capital: "Canberra", continent: "Oceania", difficulty: "medium" },
+            { country: "New Zealand", capital: "Wellington", continent: "Oceania", difficulty: "medium" },
+            { country: "Papua New Guinea", capital: "Port Moresby", continent: "Oceania", difficulty: "difficult" },
+            { country: "Fiji", capital: "Suva", continent: "Oceania", difficulty: "difficult" },
+            { country: "Solomon Islands", capital: "Honiara", continent: "Oceania", difficulty: "difficult" },
+            { country: "Samoa", capital: "Apia", continent: "Oceania", difficulty: "difficult" },
+        ];
+
+        // Global state
+        let selectedDifficulty = null;
+        let selectedAnswerType = null;
+        let selectedQuestionType = null;
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let incorrectItems = [];
+
+        // Mode selection functions
+        function selectDifficulty(difficulty) {
+            selectedDifficulty = difficulty;
+            localStorage.setItem('capitalCities_difficulty', difficulty);
+            document.querySelectorAll('.mode-group:nth-child(1) button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            checkStartButton();
+        }
+
+        function selectAnswerType(type) {
+            selectedAnswerType = type;
+            localStorage.setItem('capitalCities_answerType', type);
+            document.querySelectorAll('.mode-group:nth-child(2) button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            checkStartButton();
+        }
+
+        function selectQuestionType(type) {
+            selectedQuestionType = type;
+            localStorage.setItem('capitalCities_questionType', type);
+            document.querySelectorAll('.mode-group:nth-child(3) button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            checkStartButton();
+        }
+
+        function checkStartButton() {
+            const startButton = document.getElementById('startButton');
+            if (selectedDifficulty && selectedAnswerType && selectedQuestionType) {
+                startButton.disabled = false;
+            }
+        }
+
+        function loadSavedSettings() {
+            // Load saved difficulty
+            const savedDifficulty = localStorage.getItem('capitalCities_difficulty');
+            if (savedDifficulty) {
+                selectedDifficulty = savedDifficulty;
+                // Find and select the correct button
+                const difficultyButtons = document.querySelectorAll('.mode-group:nth-child(1) button');
+                difficultyButtons.forEach(btn => {
+                    if (btn.textContent.toLowerCase() === savedDifficulty) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+
+            // Load saved answer type
+            const savedAnswerType = localStorage.getItem('capitalCities_answerType');
+            if (savedAnswerType) {
+                selectedAnswerType = savedAnswerType;
+                // Find and select the correct button
+                const answerTypeButtons = document.querySelectorAll('.mode-group:nth-child(2) button');
+                answerTypeButtons.forEach(btn => {
+                    const buttonText = btn.textContent.toLowerCase().replace(' ', '-');
+                    if (buttonText === savedAnswerType) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+
+            // Load saved question type
+            const savedQuestionType = localStorage.getItem('capitalCities_questionType');
+            if (savedQuestionType) {
+                selectedQuestionType = savedQuestionType;
+                // Find and select the correct button
+                const questionTypeButtons = document.querySelectorAll('.mode-group:nth-child(3) button');
+                questionTypeButtons.forEach(btn => {
+                    const buttonText = btn.textContent.toLowerCase().replace(/\s+/g, '-');
+                    if (buttonText.includes(savedQuestionType.split('-')[0]) || buttonText.includes(savedQuestionType.split('-')[2])) {
+                        // Match by checking if it's country-to-capital or capital-to-country
+                        const isCountryToCapital = savedQuestionType === 'country-to-capital';
+                        const isCapitalFromCountry = buttonText.includes('capital') && buttonText.includes('country');
+                        const isCountryFromCapital = buttonText.includes('country') && buttonText.includes('capital');
+
+                        if ((isCountryToCapital && isCapitalFromCountry && btn.textContent.startsWith('Capital')) ||
+                            (!isCountryToCapital && isCountryFromCapital && btn.textContent.startsWith('Country'))) {
+                            btn.classList.add('selected');
+                        }
+                    }
+                });
+            }
+
+            // Enable start button if all settings are loaded
+            checkStartButton();
+        }
+
+        // Quiz functions
+        function startQuiz() {
+            // Filter questions by difficulty
+            const filteredQuestions = capitalCitiesData.filter(item => item.difficulty === selectedDifficulty);
+
+            // Shuffle and select 20 questions
+            currentQuestions = shuffleArray([...filteredQuestions]).slice(0, Math.min(20, filteredQuestions.length));
+            currentIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            incorrectItems = [];
+
+            // Show quiz screen
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+
+            showQuestion();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showQuestion() {
+            if (currentIndex >= currentQuestions.length) {
+                showComplete();
+                return;
+            }
+
+            const question = currentQuestions[currentIndex];
+            const continentBadge = document.getElementById('continentBadge');
+
+            // Update display based on question type
+            if (selectedQuestionType === 'country-to-capital') {
+                document.getElementById('questionText').textContent = 'What is the capital city of';
+                document.getElementById('countryName').textContent = question.country;
+                continentBadge.textContent = question.continent;
+                continentBadge.style.display = 'inline-block';
+            } else {
+                document.getElementById('questionText').textContent = 'Which country has the capital city';
+                document.getElementById('countryName').textContent = question.capital;
+                continentBadge.style.display = 'none';
+            }
+
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('incorrectCount').textContent = incorrectCount;
+            document.getElementById('totalCount').textContent = correctCount + incorrectCount;
+
+            // Hide feedback
+            document.getElementById('feedbackContainer').classList.add('hidden');
+
+            // Show appropriate answer interface
+            if (selectedAnswerType === 'multiple-choice') {
+                showMultipleChoice(question);
+            } else {
+                showFreeText();
+            }
+        }
+
+        function showMultipleChoice(question) {
+            document.getElementById('multipleChoiceContainer').classList.remove('hidden');
+            document.getElementById('freeTextContainer').classList.add('hidden');
+
+            // Determine correct answer and choices based on question type
+            let correctAnswer, choices, otherOptions;
+
+            if (selectedQuestionType === 'country-to-capital') {
+                correctAnswer = question.capital;
+                choices = [question.capital];
+                otherOptions = capitalCitiesData
+                    .filter(item => item.capital !== question.capital)
+                    .map(item => item.capital);
+            } else {
+                correctAnswer = question.country;
+                choices = [question.country];
+                otherOptions = capitalCitiesData
+                    .filter(item => item.country !== question.country)
+                    .map(item => item.country);
+            }
+
+            while (choices.length < 4) {
+                const randomOption = otherOptions[Math.floor(Math.random() * otherOptions.length)];
+                if (!choices.includes(randomOption)) {
+                    choices.push(randomOption);
+                }
+            }
+
+            shuffleArray(choices);
+
+            // Display choices
+            const choicesContainer = document.getElementById('choices');
+            choicesContainer.innerHTML = '';
+            choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                button.textContent = choice;
+                button.onclick = () => checkMultipleChoice(choice, correctAnswer);
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function showFreeText() {
+            document.getElementById('freeTextContainer').classList.remove('hidden');
+            document.getElementById('multipleChoiceContainer').classList.add('hidden');
+
+            const input = document.getElementById('answerInput');
+            const submitBtn = document.getElementById('submitButton');
+            input.value = '';
+            input.disabled = false;
+            submitBtn.disabled = false;
+            input.focus();
+
+            // Allow Enter key to submit
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter' && !submitBtn.disabled) {
+                    submitFreeText();
+                }
+            };
+        }
+
+        function checkMultipleChoice(selected, correct) {
+            const buttons = document.querySelectorAll('.choice-button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === correct) {
+                    button.classList.add('correct');
+                } else if (button.textContent === selected && selected !== correct) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            showFeedback(selected === correct);
+
+            // Auto-advance to next question after delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function submitFreeText() {
+            const input = document.getElementById('answerInput');
+            const submitBtn = document.getElementById('submitButton');
+            const userAnswer = input.value.trim();
+            const question = currentQuestions[currentIndex];
+
+            if (!userAnswer) {
+                return;
+            }
+
+            // Determine correct answer based on question type
+            const correctAnswer = selectedQuestionType === 'country-to-capital' ? question.capital : question.country;
+
+            // Normalize answers for comparison (lowercase, remove punctuation)
+            const normalizedUser = userAnswer.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+            const normalizedCorrect = correctAnswer.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+
+            const isCorrect = normalizedUser === normalizedCorrect;
+
+            input.disabled = true;
+            submitBtn.disabled = true;
+            showFeedback(isCorrect);
+
+            // Auto-advance to next question after delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function showFeedback(isCorrect) {
+            const question = currentQuestions[currentIndex];
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const feedback = document.getElementById('feedback');
+
+            feedbackContainer.classList.remove('hidden');
+
+            let feedbackText;
+            if (selectedQuestionType === 'country-to-capital') {
+                feedbackText = isCorrect
+                    ? '✓ Correct! The capital of ' + question.country + ' is ' + question.capital + '.'
+                    : '✗ Incorrect. The capital of ' + question.country + ' is ' + question.capital + '.';
+            } else {
+                feedbackText = isCorrect
+                    ? '✓ Correct! ' + question.capital + ' is the capital of ' + question.country + '.'
+                    : '✗ Incorrect. ' + question.capital + ' is the capital of ' + question.country + '.';
+            }
+
+            if (isCorrect) {
+                correctCount++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = feedbackText;
+            } else {
+                incorrectCount++;
+                incorrectItems.push(question);
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = feedbackText;
+            }
+
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('incorrectCount').textContent = incorrectCount;
+            document.getElementById('totalCount').textContent = correctCount + incorrectCount;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            showQuestion();
+        }
+
+        function showComplete() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('completeScreen').style.display = 'block';
+
+            const total = correctCount + incorrectCount;
+            const percentage = Math.round((correctCount / total) * 100);
+
+            document.getElementById('finalScore').textContent = percentage + '%';
+
+            let message = '';
+            if (percentage === 100) {
+                message = 'Perfect! You know your capitals!';
+            } else if (percentage >= 80) {
+                message = 'Excellent work! You\'re a geography star!';
+            } else if (percentage >= 60) {
+                message = 'Good job! Keep practising!';
+            } else {
+                message = 'Nice try! Keep learning!';
+            }
+            document.getElementById('message').textContent = message;
+
+            // Show review section
+            const reviewSection = document.getElementById('reviewSection');
+            const reviewList = document.getElementById('reviewList');
+
+            if (incorrectItems.length > 0) {
+                reviewSection.style.display = 'block';
+                reviewList.innerHTML = '';
+                incorrectItems.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'review-item';
+                    div.innerHTML = '<span class="review-country">' + item.country + '</span>' +
+                                   '<span class="review-capital">' + item.capital + '</span>';
+                    reviewList.appendChild(div);
+                });
+            } else {
+                reviewSection.style.display = 'none';
+            }
+        }
+
+        function finishTest() {
+            showComplete();
+        }
+
+        function resetQuiz() {
+            document.getElementById('completeScreen').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('modeSelection').style.display = 'block';
+
+            // Keep the previous selections - don't reset them
+            checkStartButton();
+        }
+
+        // Load saved settings when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            loadSavedSettings();
+        });
+    </script>
+</body>
+</html>
