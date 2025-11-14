@@ -149,7 +149,7 @@
             }
 
             .example-sentence {
-                font-size: 1em;
+                font-size: 0.9em;
                 padding: 12px 15px;
             }
         }
@@ -465,9 +465,10 @@
             border-radius: 10px;
             padding: 15px 20px;
             margin-bottom: 20px;
-            font-size: 1.1em;
+            font-size: 1em;
             color: #333;
             line-height: 1.5;
+            text-align: center;
         }
 
         .example-sentence strong {
@@ -552,10 +553,6 @@
 
         <!-- 1-Person Mode Quiz -->
         <div id="quiz-area-one-person" class="hidden">
-            <div id="example-sentence-container" class="example-sentence hidden">
-                <strong>Example:</strong> <span id="example-sentence-text"></span>
-            </div>
-
             <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
                 <button class="speak-btn" onclick="speakWord()" title="Hear word again" style="position: static; margin-bottom: 20px;">🔊</button>
                 <input type="text" class="spelling-input" id="spelling-input" placeholder="Type the word here" autocomplete="off">
@@ -571,6 +568,10 @@
             <div class="word-display">
                 <button class="speak-btn" onclick="speakWord()" title="Hear word again">🔊</button>
                 <div class="word" id="word"></div>
+            </div>
+
+            <div id="example-sentence-two-person" class="example-sentence hidden">
+                <strong>Example:</strong> <span id="example-sentence-two-person-text"></span>
             </div>
 
             <div class="buttons">
@@ -709,27 +710,41 @@
             // Cancel any ongoing speech
             speechSynthesis.cancel();
 
-            const utterance = new SpeechSynthesisUtterance(currentWord);
-
-            // Try to use UK English voice
+            // Get the voice settings
             const voices = speechSynthesis.getVoices();
             const ukVoice = voices.find(voice =>
                 voice.lang.startsWith('en-GB') || voice.lang.startsWith('en-UK')
             );
+            const selectedVoice = ukVoice || voices.find(voice => voice.lang.startsWith('en'));
 
-            if (ukVoice) {
-                utterance.voice = ukVoice;
-            } else {
-                // Fallback to any English voice
-                const enVoice = voices.find(voice => voice.lang.startsWith('en'));
-                if (enVoice) utterance.voice = enVoice;
+            // Speak the word
+            const wordUtterance = new SpeechSynthesisUtterance(currentWord);
+            if (selectedVoice) wordUtterance.voice = selectedVoice;
+            wordUtterance.rate = 0.85;
+            wordUtterance.pitch = 1.0;
+            wordUtterance.volume = 1.0;
+
+            speechSynthesis.speak(wordUtterance);
+
+            // Check if there's an example sentence for this word (only in 1-person mode)
+            if (quizMode === 'one-person') {
+                const examples = wordSets[selectedWordSet].examples || {};
+                const exampleSentence = examples[currentWord];
+
+                if (exampleSentence) {
+                    // Speak the example after a short pause
+                    wordUtterance.onend = () => {
+                        setTimeout(() => {
+                            const exampleUtterance = new SpeechSynthesisUtterance("Example: " + exampleSentence);
+                            if (selectedVoice) exampleUtterance.voice = selectedVoice;
+                            exampleUtterance.rate = 0.85;
+                            exampleUtterance.pitch = 1.0;
+                            exampleUtterance.volume = 1.0;
+                            speechSynthesis.speak(exampleUtterance);
+                        }, 500);
+                    };
+                }
             }
-
-            utterance.rate = 0.85; // Slightly slower for clarity
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
-
-            speechSynthesis.speak(utterance);
         }
 
         function startQuiz() {
@@ -763,24 +778,23 @@
                     document.getElementById('spelling-input').value = '';
                     document.getElementById('feedback').textContent = '';
                     document.getElementById('feedback').className = 'feedback';
-
-                    // Check if this word has an example sentence
-                    const examples = wordSets[selectedWordSet].examples || {};
-                    const exampleSentence = examples[currentWord];
-
-                    if (exampleSentence) {
-                        document.getElementById('example-sentence-container').classList.remove('hidden');
-                        document.getElementById('example-sentence-text').textContent = exampleSentence;
-                    } else {
-                        document.getElementById('example-sentence-container').classList.add('hidden');
-                    }
-
                     document.getElementById('spelling-input').focus();
                 } else {
                     // 2-person mode: show the word
                     document.getElementById('word').textContent = currentWord;
                     document.getElementById('quiz-area-one-person').classList.add('hidden');
                     document.getElementById('quiz-area-two-person').classList.remove('hidden');
+
+                    // Check if this word has an example sentence and show it
+                    const examples = wordSets[selectedWordSet].examples || {};
+                    const exampleSentence = examples[currentWord];
+
+                    if (exampleSentence) {
+                        document.getElementById('example-sentence-two-person').classList.remove('hidden');
+                        document.getElementById('example-sentence-two-person-text').textContent = exampleSentence;
+                    } else {
+                        document.getElementById('example-sentence-two-person').classList.add('hidden');
+                    }
                 }
 
                 document.getElementById('complete-area').classList.add('hidden');
