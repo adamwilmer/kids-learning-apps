@@ -142,6 +142,11 @@
                 font-size: 1em;
                 padding: 12px 30px;
             }
+
+            .word-set-selector select {
+                min-width: 200px;
+                font-size: 0.9em;
+            }
         }
 
         .progress {
@@ -336,6 +341,36 @@
             margin-bottom: 20px;
         }
 
+        .word-set-selector {
+            margin-bottom: 30px;
+        }
+
+        .word-set-selector label {
+            display: block;
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .word-set-selector select {
+            padding: 12px 20px;
+            font-size: 1em;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            min-width: 300px;
+            font-family: inherit;
+        }
+
+        .word-set-selector select:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
         .mode-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -458,6 +493,14 @@
         <h1>Spelling Bee - Year 1</h1>
 
         <div id="mode-selection-area" class="mode-selection">
+            <div class="word-set-selector">
+                <label for="word-set-select">Choose Word List:</label>
+                <select id="word-set-select" onchange="updateWordSet()">
+                    <option value="year1">Year 1 Common Words</option>
+                    <option value="finals">ETSP Spelling Bee Finals - Additional Words</option>
+                </select>
+            </div>
+
             <h2>Choose Your Mode</h2>
             <div class="mode-buttons">
                 <button class="mode-btn" onclick="selectMode('one-person')">
@@ -525,20 +568,42 @@
     </div>
 
     <script>
-        const words = [
-            "miss", "back", "think", "pocket", "live", "spends", "hunted", "jumping",
-            "fresher", "quickest", "train", "wait", "afraid", "coin", "point", "soil",
-            "play", "stay", "boy", "annoy", "enjoy", "made", "same", "five",
-            "like", "time", "home", "those", "rule", "tube", "start", "arm",
-            "garden", "tree", "green", "dream", "read", "bread", "instead", "her",
-            "person", "summer", "winter", "sister", "first", "third", "turn", "church",
-            "Thursday", "food", "took", "boat", "coach", "goes", "about", "around",
-            "sound", "down", "town", "show", "blue", "Tuesday", "flew", "drew",
-            "cried", "field", "night", "bright", "short", "morning", "before", "draw",
-            "crawl", "August", "dinosaur", "chair", "year", "wear", "share", "family",
-            "elephant", "skin", "unhappy", "undo", "playground", "said", "come", "was",
-            "your", "where", "love", "some", "ask", "friend", "school", "house"
-        ];
+        const wordSets = {
+            'year1': {
+                title: 'Year 1 Common Words',
+                words: [
+                    "miss", "back", "think", "pocket", "live", "spends", "hunted", "jumping",
+                    "fresher", "quickest", "train", "wait", "afraid", "coin", "point", "soil",
+                    "play", "stay", "boy", "annoy", "enjoy", "made", "same", "five",
+                    "like", "time", "home", "those", "rule", "tube", "start", "arm",
+                    "garden", "tree", "green", "dream", "read", "bread", "instead", "her",
+                    "person", "summer", "winter", "sister", "first", "third", "turn", "church",
+                    "Thursday", "food", "took", "boat", "coach", "goes", "about", "around",
+                    "sound", "down", "town", "show", "blue", "Tuesday", "flew", "drew",
+                    "cried", "field", "night", "bright", "short", "morning", "before", "draw",
+                    "crawl", "August", "dinosaur", "chair", "year", "wear", "share", "family",
+                    "elephant", "skin", "unhappy", "undo", "playground", "said", "come", "was",
+                    "your", "where", "love", "some", "ask", "friend", "school", "house"
+                ]
+            },
+            'finals': {
+                title: 'ETSP Spelling Bee Finals - Additional Words',
+                words: [
+                    "badge", "edge", "change", "village", "giant", "magic", "jacket", "adjust",
+                    "city", "fancy", "knock", "written", "wrong", "table", "middle", "tunnel",
+                    "travel", "towel", "metal", "hospital", "animal", "pencil", "reply", "tries",
+                    "replies", "carries", "happiest", "copied", "nicest", "shiny", "mixing", "dropped",
+                    "saddest", "runner", "talk", "always", "mother", "brother", "nothing", "Monday",
+                    "donkey", "chimney", "valley", "watch", "quantity", "squash", "world", "warm",
+                    "towards", "treasure", "usual", "enjoyment", "careful", "hopeless", "happiness", "plentiful",
+                    "happily", "station", "fiction", "motion", "national", "section", "there", "quite",
+                    "quiet", "because", "behind", "children", "wild", "climb", "most", "both",
+                    "every", "everybody", "great", "pretty", "beautiful", "after", "father", "class",
+                    "grass", "hour", "improve", "sugar", "could", "should", "would", "whole",
+                    "many", "clothes", "busy", "people", "again", "half", "parents", "Christmas"
+                ]
+            }
+        };
 
         let shuffledWords = [];
         let currentIndex = 0;
@@ -548,6 +613,11 @@
         let speechSynthesis = window.speechSynthesis;
         let currentWord = '';
         let quizMode = ''; // 'one-person' or 'two-person'
+        let selectedWordSet = 'year1'; // default word set
+
+        function updateWordSet() {
+            selectedWordSet = document.getElementById('word-set-select').value;
+        }
 
         function selectMode(mode) {
             quizMode = mode;
@@ -617,6 +687,7 @@
         }
 
         function startQuiz() {
+            const words = wordSets[selectedWordSet].words;
             shuffledWords = shuffleArray(words);
             currentIndex = 0;
             correctCount = 0;
@@ -629,6 +700,7 @@
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'quiz_start', {
                     activity: 'spelling-bee',
+                    word_set: selectedWordSet,
                     total_words: shuffledWords.length
                 });
             }
