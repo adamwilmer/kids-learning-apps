@@ -614,6 +614,7 @@
         let currentWord = '';
         let quizMode = ''; // 'one-person' or 'two-person'
         let selectedWordSet = 'year1'; // default word set
+        let nextWordTimeout = null; // Track timeout for auto-advancing to next word
 
         function updateWordSet() {
             selectedWordSet = document.getElementById('word-set-select').value;
@@ -763,8 +764,13 @@
             currentIndex++;
             updateDisplay();
 
+            // Clear any pending timeout
+            if (nextWordTimeout) {
+                clearTimeout(nextWordTimeout);
+            }
+
             // Move to next word after a short delay
-            setTimeout(() => {
+            nextWordTimeout = setTimeout(() => {
                 showCurrentWord();
             }, 2000);
         }
@@ -830,10 +836,21 @@
         }
 
         function finishTest() {
+            // Clear any pending timeout to prevent showing next word
+            if (nextWordTimeout) {
+                clearTimeout(nextWordTimeout);
+                nextWordTimeout = null;
+            }
             showComplete();
         }
 
         function resetQuiz() {
+            // Clear any pending timeout
+            if (nextWordTimeout) {
+                clearTimeout(nextWordTimeout);
+                nextWordTimeout = null;
+            }
+
             // Reset to mode selection
             quizMode = '';
             currentIndex = 0;
