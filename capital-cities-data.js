@@ -1,0 +1,252 @@
+// Capital Cities Data
+// This data will be embedded into the capital-cities.html file
+// Difficulty levels are based on what a 10-year-old child might reasonably know
+// easy: Very well-known countries
+// medium: Familiar countries with potentially surprising capitals
+// difficult: Lesser-known countries or unexpected capitals
+// very-difficult: Obscure countries most children won't have encountered
+
+const capitalCitiesData = [
+  // Europe
+  { country: "United Kingdom", capital: "London", continent: "Europe", difficulty: "easy" },
+  { country: "France", capital: "Paris", continent: "Europe", difficulty: "easy" },
+  { country: "Germany", capital: "Berlin", continent: "Europe", difficulty: "easy" },
+  { country: "Italy", capital: "Rome", continent: "Europe", difficulty: "easy" },
+  { country: "Spain", capital: "Madrid", continent: "Europe", difficulty: "medium" },
+  { country: "Portugal", capital: "Lisbon", continent: "Europe", difficulty: "medium" },
+  { country: "Netherlands", capital: "Amsterdam", continent: "Europe", difficulty: "medium" },
+  { country: "Belgium", capital: "Brussels", continent: "Europe", difficulty: "medium" },
+  { country: "Greece", capital: "Athens", continent: "Europe", difficulty: "easy" },
+  { country: "Poland", capital: "Warsaw", continent: "Europe", difficulty: "medium" },
+  { country: "Russia", capital: "Moscow", continent: "Europe", difficulty: "easy" },
+  { country: "Sweden", capital: "Stockholm", continent: "Europe", difficulty: "medium" },
+  { country: "Norway", capital: "Oslo", continent: "Europe", difficulty: "medium" },
+  { country: "Denmark", capital: "Copenhagen", continent: "Europe", difficulty: "medium" },
+  { country: "Finland", capital: "Helsinki", continent: "Europe", difficulty: "medium" },
+  { country: "Ireland", capital: "Dublin", continent: "Europe", difficulty: "medium" },
+  { country: "Switzerland", capital: "Bern", continent: "Europe", difficulty: "difficult" },
+  { country: "Austria", capital: "Vienna", continent: "Europe", difficulty: "medium" },
+  { country: "Czech Republic", capital: "Prague", continent: "Europe", difficulty: "medium" },
+  { country: "Hungary", capital: "Budapest", continent: "Europe", difficulty: "medium" },
+  { country: "Romania", capital: "Bucharest", continent: "Europe", difficulty: "difficult" },
+  { country: "Ukraine", capital: "Kyiv", continent: "Europe", difficulty: "medium" },
+  { country: "Turkey", capital: "Ankara", continent: "Europe", difficulty: "difficult" },
+  { country: "Iceland", capital: "Reykjavik", continent: "Europe", difficulty: "medium" },
+
+  // Asia
+  { country: "China", capital: "Beijing", continent: "Asia", difficulty: "easy" },
+  { country: "Japan", capital: "Tokyo", continent: "Asia", difficulty: "easy" },
+  { country: "India", capital: "New Delhi", continent: "Asia", difficulty: "medium" },
+  { country: "South Korea", capital: "Seoul", continent: "Asia", difficulty: "medium" },
+  { country: "Thailand", capital: "Bangkok", continent: "Asia", difficulty: "medium" },
+  { country: "Vietnam", capital: "Hanoi", continent: "Asia", difficulty: "difficult" },
+  { country: "Indonesia", capital: "Jakarta", continent: "Asia", difficulty: "difficult" },
+  { country: "Malaysia", capital: "Kuala Lumpur", continent: "Asia", difficulty: "medium" },
+  { country: "Singapore", capital: "Singapore", continent: "Asia", difficulty: "easy" },
+  { country: "Philippines", capital: "Manila", continent: "Asia", difficulty: "medium" },
+  { country: "Pakistan", capital: "Islamabad", continent: "Asia", difficulty: "difficult" },
+  { country: "Bangladesh", capital: "Dhaka", continent: "Asia", difficulty: "difficult" },
+  { country: "Afghanistan", capital: "Kabul", continent: "Asia", difficulty: "medium" },
+  { country: "Iran", capital: "Tehran", continent: "Asia", difficulty: "medium" },
+  { country: "Iraq", capital: "Baghdad", continent: "Asia", difficulty: "medium" },
+  { country: "Saudi Arabia", capital: "Riyadh", continent: "Asia", difficulty: "difficult" },
+  { country: "Israel", capital: "Jerusalem", continent: "Asia", difficulty: "medium" },
+  { country: "United Arab Emirates", capital: "Abu Dhabi", continent: "Asia", difficulty: "difficult" },
+  { country: "Nepal", capital: "Kathmandu", continent: "Asia", difficulty: "medium" },
+  { country: "Sri Lanka", capital: "Colombo", continent: "Asia", difficulty: "difficult" },
+  { country: "Myanmar", capital: "Naypyidaw", continent: "Asia", difficulty: "difficult" },
+  { country: "Cambodia", capital: "Phnom Penh", continent: "Asia", difficulty: "difficult" },
+  { country: "Laos", capital: "Vientiane", continent: "Asia", difficulty: "difficult" },
+  { country: "Mongolia", capital: "Ulaanbaatar", continent: "Asia", difficulty: "difficult" },
+  { country: "North Korea", capital: "Pyongyang", continent: "Asia", difficulty: "medium" },
+
+  // Africa
+  { country: "Egypt", capital: "Cairo", continent: "Africa", difficulty: "easy" },
+  { country: "South Africa", capital: "Pretoria", continent: "Africa", difficulty: "difficult" },
+  { country: "Nigeria", capital: "Abuja", continent: "Africa", difficulty: "difficult" },
+  { country: "Kenya", capital: "Nairobi", continent: "Africa", difficulty: "medium" },
+  { country: "Ethiopia", capital: "Addis Ababa", continent: "Africa", difficulty: "difficult" },
+  { country: "Morocco", capital: "Rabat", continent: "Africa", difficulty: "difficult" },
+  { country: "Algeria", capital: "Algiers", continent: "Africa", difficulty: "difficult" },
+  { country: "Tunisia", capital: "Tunis", continent: "Africa", difficulty: "medium" },
+  { country: "Libya", capital: "Tripoli", continent: "Africa", difficulty: "medium" },
+  { country: "Sudan", capital: "Khartoum", continent: "Africa", difficulty: "difficult" },
+  { country: "Ghana", capital: "Accra", continent: "Africa", difficulty: "difficult" },
+  { country: "Tanzania", capital: "Dodoma", continent: "Africa", difficulty: "difficult" },
+  { country: "Uganda", capital: "Kampala", continent: "Africa", difficulty: "difficult" },
+  { country: "Zimbabwe", capital: "Harare", continent: "Africa", difficulty: "difficult" },
+  { country: "Zambia", capital: "Lusaka", continent: "Africa", difficulty: "difficult" },
+  { country: "Senegal", capital: "Dakar", continent: "Africa", difficulty: "difficult" },
+  { country: "Angola", capital: "Luanda", continent: "Africa", difficulty: "difficult" },
+  { country: "Mozambique", capital: "Maputo", continent: "Africa", difficulty: "difficult" },
+  { country: "Madagascar", capital: "Antananarivo", continent: "Africa", difficulty: "difficult" },
+  { country: "Cameroon", capital: "Yaoundé", continent: "Africa", difficulty: "difficult" },
+
+  // North America
+  { country: "United States", capital: "Washington, D.C.", continent: "North America", difficulty: "easy" },
+  { country: "Canada", capital: "Ottawa", continent: "North America", difficulty: "medium" },
+  { country: "Mexico", capital: "Mexico City", continent: "North America", difficulty: "easy" },
+  { country: "Cuba", capital: "Havana", continent: "North America", difficulty: "medium" },
+  { country: "Jamaica", capital: "Kingston", continent: "North America", difficulty: "difficult" },
+  { country: "Haiti", capital: "Port-au-Prince", continent: "North America", difficulty: "difficult" },
+  { country: "Dominican Republic", capital: "Santo Domingo", continent: "North America", difficulty: "difficult" },
+  { country: "Guatemala", capital: "Guatemala City", continent: "North America", difficulty: "medium" },
+  { country: "Honduras", capital: "Tegucigalpa", continent: "North America", difficulty: "difficult" },
+  { country: "Nicaragua", capital: "Managua", continent: "North America", difficulty: "difficult" },
+  { country: "Costa Rica", capital: "San José", continent: "North America", difficulty: "medium" },
+  { country: "Panama", capital: "Panama City", continent: "North America", difficulty: "medium" },
+
+  // South America
+  { country: "Brazil", capital: "Brasília", continent: "South America", difficulty: "medium" },
+  { country: "Argentina", capital: "Buenos Aires", continent: "South America", difficulty: "medium" },
+  { country: "Chile", capital: "Santiago", continent: "South America", difficulty: "medium" },
+  { country: "Peru", capital: "Lima", continent: "South America", difficulty: "medium" },
+  { country: "Colombia", capital: "Bogotá", continent: "South America", difficulty: "medium" },
+  { country: "Venezuela", capital: "Caracas", continent: "South America", difficulty: "difficult" },
+  { country: "Ecuador", capital: "Quito", continent: "South America", difficulty: "difficult" },
+  { country: "Bolivia", capital: "La Paz", continent: "South America", difficulty: "difficult" },
+  { country: "Paraguay", capital: "Asunción", continent: "South America", difficulty: "difficult" },
+  { country: "Uruguay", capital: "Montevideo", continent: "South America", difficulty: "difficult" },
+  { country: "Guyana", capital: "Georgetown", continent: "South America", difficulty: "difficult" },
+  { country: "Suriname", capital: "Paramaribo", continent: "South America", difficulty: "difficult" },
+
+  // Oceania
+  { country: "Australia", capital: "Canberra", continent: "Oceania", difficulty: "medium" },
+  { country: "New Zealand", capital: "Wellington", continent: "Oceania", difficulty: "medium" },
+  { country: "Papua New Guinea", capital: "Port Moresby", continent: "Oceania", difficulty: "difficult" },
+  { country: "Fiji", capital: "Suva", continent: "Oceania", difficulty: "difficult" },
+  { country: "Solomon Islands", capital: "Honiara", continent: "Oceania", difficulty: "difficult" },
+  { country: "Samoa", capital: "Apia", continent: "Oceania", difficulty: "difficult" },
+  { country: "Vanuatu", capital: "Port Vila", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Tonga", capital: "Nuku'alofa", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Kiribati", capital: "Tarawa", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Micronesia", capital: "Palikir", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Marshall Islands", capital: "Majuro", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Palau", capital: "Ngerulmud", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Nauru", capital: "Yaren", continent: "Oceania", difficulty: "very-difficult" },
+  { country: "Tuvalu", capital: "Funafuti", continent: "Oceania", difficulty: "very-difficult" },
+
+  // Additional Europe
+  { country: "Croatia", capital: "Zagreb", continent: "Europe", difficulty: "difficult" },
+  { country: "Serbia", capital: "Belgrade", continent: "Europe", difficulty: "difficult" },
+  { country: "Slovenia", capital: "Ljubljana", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Bosnia and Herzegovina", capital: "Sarajevo", continent: "Europe", difficulty: "difficult" },
+  { country: "Montenegro", capital: "Podgorica", continent: "Europe", difficulty: "very-difficult" },
+  { country: "North Macedonia", capital: "Skopje", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Albania", capital: "Tirana", continent: "Europe", difficulty: "difficult" },
+  { country: "Bulgaria", capital: "Sofia", continent: "Europe", difficulty: "difficult" },
+  { country: "Moldova", capital: "Chișinău", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Belarus", capital: "Minsk", continent: "Europe", difficulty: "difficult" },
+  { country: "Estonia", capital: "Tallinn", continent: "Europe", difficulty: "difficult" },
+  { country: "Latvia", capital: "Riga", continent: "Europe", difficulty: "difficult" },
+  { country: "Lithuania", capital: "Vilnius", continent: "Europe", difficulty: "difficult" },
+  { country: "Slovakia", capital: "Bratislava", continent: "Europe", difficulty: "difficult" },
+  { country: "Luxembourg", capital: "Luxembourg", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Malta", capital: "Valletta", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Cyprus", capital: "Nicosia", continent: "Europe", difficulty: "difficult" },
+  { country: "Andorra", capital: "Andorra la Vella", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Monaco", capital: "Monaco", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Liechtenstein", capital: "Vaduz", continent: "Europe", difficulty: "very-difficult" },
+  { country: "San Marino", capital: "San Marino", continent: "Europe", difficulty: "very-difficult" },
+  { country: "Vatican City", capital: "Vatican City", continent: "Europe", difficulty: "very-difficult" },
+
+  // Additional Asia
+  { country: "Armenia", capital: "Yerevan", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Azerbaijan", capital: "Baku", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Georgia", capital: "Tbilisi", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Kazakhstan", capital: "Astana", continent: "Asia", difficulty: "difficult" },
+  { country: "Uzbekistan", capital: "Tashkent", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Turkmenistan", capital: "Ashgabat", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Kyrgyzstan", capital: "Bishkek", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Tajikistan", capital: "Dushanbe", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Yemen", capital: "Sana'a", continent: "Asia", difficulty: "difficult" },
+  { country: "Oman", capital: "Muscat", continent: "Asia", difficulty: "difficult" },
+  { country: "Kuwait", capital: "Kuwait City", continent: "Asia", difficulty: "difficult" },
+  { country: "Qatar", capital: "Doha", continent: "Asia", difficulty: "difficult" },
+  { country: "Bahrain", capital: "Manama", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Jordan", capital: "Amman", continent: "Asia", difficulty: "difficult" },
+  { country: "Lebanon", capital: "Beirut", continent: "Asia", difficulty: "difficult" },
+  { country: "Syria", capital: "Damascus", continent: "Asia", difficulty: "difficult" },
+  { country: "Bhutan", capital: "Thimphu", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Brunei", capital: "Bandar Seri Begawan", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Timor-Leste", capital: "Dili", continent: "Asia", difficulty: "very-difficult" },
+  { country: "Maldives", capital: "Malé", continent: "Asia", difficulty: "very-difficult" },
+
+  // Additional Africa
+  { country: "Rwanda", capital: "Kigali", continent: "Africa", difficulty: "difficult" },
+  { country: "Burundi", capital: "Gitega", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Botswana", capital: "Gaborone", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Namibia", capital: "Windhoek", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Malawi", capital: "Lilongwe", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Lesotho", capital: "Maseru", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Eswatini", capital: "Mbabane", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Mali", capital: "Bamako", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Burkina Faso", capital: "Ouagadougou", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Niger", capital: "Niamey", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Chad", capital: "N'Djamena", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Central African Republic", capital: "Bangui", continent: "Africa", difficulty: "very-difficult" },
+  { country: "South Sudan", capital: "Juba", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Eritrea", capital: "Asmara", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Djibouti", capital: "Djibouti", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Somalia", capital: "Mogadishu", continent: "Africa", difficulty: "difficult" },
+  { country: "Republic of the Congo", capital: "Brazzaville", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Democratic Republic of the Congo", capital: "Kinshasa", continent: "Africa", difficulty: "difficult" },
+  { country: "Gabon", capital: "Libreville", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Equatorial Guinea", capital: "Malabo", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Togo", capital: "Lomé", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Benin", capital: "Porto-Novo", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Sierra Leone", capital: "Freetown", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Liberia", capital: "Monrovia", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Guinea", capital: "Conakry", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Guinea-Bissau", capital: "Bissau", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Gambia", capital: "Banjul", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Mauritania", capital: "Nouakchott", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Mauritius", capital: "Port Louis", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Seychelles", capital: "Victoria", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Comoros", capital: "Moroni", continent: "Africa", difficulty: "very-difficult" },
+  { country: "Cape Verde", capital: "Praia", continent: "Africa", difficulty: "very-difficult" },
+  { country: "São Tomé and Príncipe", capital: "São Tomé", continent: "Africa", difficulty: "very-difficult" },
+
+  // Additional North America/Caribbean
+  { country: "Belize", capital: "Belmopan", continent: "North America", difficulty: "very-difficult" },
+  { country: "El Salvador", capital: "San Salvador", continent: "North America", difficulty: "difficult" },
+  { country: "Bahamas", capital: "Nassau", continent: "North America", difficulty: "difficult" },
+  { country: "Trinidad and Tobago", capital: "Port of Spain", continent: "North America", difficulty: "very-difficult" },
+  { country: "Barbados", capital: "Bridgetown", continent: "North America", difficulty: "very-difficult" },
+  { country: "Saint Lucia", capital: "Castries", continent: "North America", difficulty: "very-difficult" },
+  { country: "Grenada", capital: "St. George's", continent: "North America", difficulty: "very-difficult" },
+  { country: "Saint Vincent and the Grenadines", capital: "Kingstown", continent: "North America", difficulty: "very-difficult" },
+  { country: "Antigua and Barbuda", capital: "St. John's", continent: "North America", difficulty: "very-difficult" },
+  { country: "Dominica", capital: "Roseau", continent: "North America", difficulty: "very-difficult" },
+  { country: "Saint Kitts and Nevis", capital: "Basseterre", continent: "North America", difficulty: "very-difficult" },
+];
+
+// Statistics
+const stats = {
+  total: capitalCitiesData.length,
+  byDifficulty: {
+    easy: capitalCitiesData.filter(c => c.difficulty === "easy").length,
+    medium: capitalCitiesData.filter(c => c.difficulty === "medium").length,
+    difficult: capitalCitiesData.filter(c => c.difficulty === "difficult").length,
+    "very-difficult": capitalCitiesData.filter(c => c.difficulty === "very-difficult").length
+  },
+  byContinent: {
+    Africa: capitalCitiesData.filter(c => c.continent === "Africa").length,
+    Asia: capitalCitiesData.filter(c => c.continent === "Asia").length,
+    Europe: capitalCitiesData.filter(c => c.continent === "Europe").length,
+    "North America": capitalCitiesData.filter(c => c.continent === "North America").length,
+    "South America": capitalCitiesData.filter(c => c.continent === "South America").length,
+    Oceania: capitalCitiesData.filter(c => c.continent === "Oceania").length
+  }
+};
+
+console.log("Capital Cities Data Statistics:");
+console.log(`Total countries: ${stats.total}`);
+console.log("\nBy difficulty:");
+console.log(`  Easy: ${stats.byDifficulty.easy}`);
+console.log(`  Medium: ${stats.byDifficulty.medium}`);
+console.log(`  Difficult: ${stats.byDifficulty.difficult}`);
+console.log("\nBy continent:");
+Object.entries(stats.byContinent).forEach(([continent, count]) => {
+  console.log(`  ${continent}: ${count}`);
+});
