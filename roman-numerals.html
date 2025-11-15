@@ -681,6 +681,7 @@
         let multipleChoiceMode = false;
         let timeRemaining = 60;
         let timerInterval = null;
+        let completionType = 'natural'; // natural, early_finish, timer_expiry
 
         function selectMode(mode) {
             selectedMode = mode;
@@ -689,23 +690,60 @@
                 btn.classList.remove('selected');
             });
             event.target.classList.add('selected');
+
+            // Track mode selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'setting_change', {
+                    activity: 'roman-numerals',
+                    setting_name: 'quiz_mode',
+                    setting_value: mode
+                });
+            }
         }
 
         function updateSliderValue(value) {
+            const oldValue = maxNumber;
             const index = parseInt(value);
             maxNumber = sliderValues[index];
             document.getElementById('slider-value').textContent = maxNumber;
             localStorage.setItem('romanNumerals_maxNumber', maxNumber);
+
+            // Track slider change
+            if (typeof gtag !== 'undefined' && oldValue !== maxNumber) {
+                gtag('event', 'setting_change', {
+                    activity: 'roman-numerals',
+                    setting_name: 'max_number',
+                    setting_value: maxNumber
+                });
+            }
         }
 
         function toggleTimerMode() {
             timerMode = document.getElementById('timer-mode').checked;
             localStorage.setItem('romanNumerals_timerMode', timerMode);
+
+            // Track timer mode toggle
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'setting_change', {
+                    activity: 'roman-numerals',
+                    setting_name: 'timer_mode',
+                    setting_value: timerMode
+                });
+            }
         }
 
         function toggleMultipleChoiceMode() {
             multipleChoiceMode = document.getElementById('multiple-choice-mode').checked;
             localStorage.setItem('romanNumerals_multipleChoiceMode', multipleChoiceMode);
+
+            // Track multiple choice mode toggle
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'setting_change', {
+                    activity: 'roman-numerals',
+                    setting_name: 'multiple_choice_mode',
+                    setting_value: multipleChoiceMode
+                });
+            }
         }
 
         function loadSavedSettings() {
@@ -750,6 +788,7 @@
 
                 if (timeRemaining <= 0) {
                     clearInterval(timerInterval);
+                    completionType = 'timer_expiry';
                     finishTest();
                 }
             }, 1000);
@@ -1124,6 +1163,7 @@
                     max_number: maxNumber,
                     timer_mode: timerMode,
                     multiple_choice_mode: multipleChoiceMode,
+                    completion_type: completionType,
                     score_percentage: percentage,
                     correct_count: correctCount,
                     incorrect_count: incorrectCount,
@@ -1151,10 +1191,38 @@
         }
 
         function finishTest() {
+            // Determine if this is an early finish (user clicked button) or natural completion
+            const isEarlyFinish = !timerMode && currentIndex < shuffledProblems.length;
+            if (isEarlyFinish && completionType === 'natural') {
+                completionType = 'early_finish';
+
+                // Track early finish
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'quiz_early_finish', {
+                        activity: 'roman-numerals',
+                        questions_completed: correctCount + incorrectCount,
+                        questions_remaining: shuffledProblems.length - (correctCount + incorrectCount)
+                    });
+                }
+            }
+
             showComplete();
         }
 
         function resetQuiz() {
+            const wasInProgress = !document.getElementById('quiz-area').classList.contains('hidden');
+
+            // Track quiz reset/abandonment
+            if (wasInProgress && typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_reset', {
+                    activity: 'roman-numerals',
+                    questions_completed: correctCount + incorrectCount,
+                    score_percentage: (correctCount + incorrectCount) > 0
+                        ? Math.round((correctCount / (correctCount + incorrectCount)) * 100)
+                        : 0
+                });
+            }
+
             stopTimer();
             // Show mode selection
             document.getElementById('mode-selection-area').classList.remove('hidden');
@@ -1164,6 +1232,9 @@
             document.getElementById('complete-area').classList.add('hidden');
             document.getElementById('timer-display').classList.add('hidden');
             document.getElementById('timer-text').classList.remove('warning');
+
+            // Reset completion type for next quiz
+            completionType = 'natural';
         }
 
         // Allow Enter key to submit answer

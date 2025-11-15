@@ -730,6 +730,14 @@
         };
 
         function showHome() {
+            // Track navigation back to home
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'navigation', {
+                    activity: 'guitar-learning',
+                    action: 'back_to_home'
+                });
+            }
+
             document.getElementById('mode-selection').classList.remove('hidden');
             document.getElementById('chord-library').classList.add('hidden');
             document.getElementById('chord-display').classList.add('hidden');
@@ -777,6 +785,14 @@
         }
 
         function backToLibrary() {
+            // Track navigation back to chord library
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'navigation', {
+                    activity: 'guitar-learning',
+                    action: 'back_to_chord_library'
+                });
+            }
+
             document.getElementById('chord-display').classList.add('hidden');
             document.getElementById('chord-library').classList.remove('hidden');
         }

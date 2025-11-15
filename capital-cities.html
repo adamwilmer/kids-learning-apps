@@ -818,17 +818,28 @@
         let correctCount = 0;
         let incorrectCount = 0;
         let incorrectItems = [];
+        let completionType = 'natural'; // natural or early_finish
 
         // Mode selection functions
         const difficultyLevels = ['easy', 'medium', 'difficult', 'very-difficult'];
         const difficultyLabels = ['Easy', 'Medium', 'Difficult', 'Very Difficult'];
 
         function updateDifficultySlider(value) {
+            const oldDifficulty = selectedDifficulty;
             const index = parseInt(value);
             selectedDifficulty = difficultyLevels[index];
             document.getElementById('difficulty-value').textContent = difficultyLabels[index];
             localStorage.setItem('capitalCities_difficulty', selectedDifficulty);
             checkStartButton();
+
+            // Track difficulty change
+            if (typeof gtag !== 'undefined' && oldDifficulty !== selectedDifficulty) {
+                gtag('event', 'setting_change', {
+                    activity: 'capital-cities',
+                    setting_name: 'difficulty',
+                    setting_value: selectedDifficulty
+                });
+            }
         }
 
         function selectAnswerType(type) {
@@ -839,6 +850,15 @@
             });
             event.target.classList.add('selected');
             checkStartButton();
+
+            // Track answer type selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'setting_change', {
+                    activity: 'capital-cities',
+                    setting_name: 'answer_type',
+                    setting_value: type
+                });
+            }
         }
 
         function selectQuestionType(type) {
@@ -849,6 +869,15 @@
             });
             event.target.classList.add('selected');
             checkStartButton();
+
+            // Track question type selection
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'setting_change', {
+                    activity: 'capital-cities',
+                    setting_name: 'question_type',
+                    setting_value: type
+                });
+            }
         }
 
         function checkStartButton() {
@@ -1165,6 +1194,7 @@
                     difficulty: selectedDifficulty,
                     answer_type: selectedAnswerType,
                     question_type: selectedQuestionType,
+                    completion_type: completionType,
                     score_percentage: percentage,
                     correct_count: correctCount,
                     incorrect_count: incorrectCount,
@@ -1192,16 +1222,47 @@
         }
 
         function finishTest() {
+            // Determine if this is an early finish (user clicked button) or natural completion
+            const isEarlyFinish = currentIndex < currentQuestions.length;
+            if (isEarlyFinish && completionType === 'natural') {
+                completionType = 'early_finish';
+
+                // Track early finish
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'quiz_early_finish', {
+                        activity: 'capital-cities',
+                        questions_completed: correctCount + incorrectCount,
+                        questions_remaining: currentQuestions.length - (correctCount + incorrectCount)
+                    });
+                }
+            }
+
             showComplete();
         }
 
         function resetQuiz() {
+            const wasInProgress = document.getElementById('quizContainer').style.display !== 'none';
+
+            // Track quiz reset/abandonment
+            if (wasInProgress && typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_reset', {
+                    activity: 'capital-cities',
+                    questions_completed: correctCount + incorrectCount,
+                    score_percentage: (correctCount + incorrectCount) > 0
+                        ? Math.round((correctCount / (correctCount + incorrectCount)) * 100)
+                        : 0
+                });
+            }
+
             document.getElementById('completeScreen').style.display = 'none';
             document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('modeSelection').style.display = 'block';
 
             // Keep the previous selections - don't reset them
             checkStartButton();
+
+            // Reset completion type for next quiz
+            completionType = 'natural';
         }
 
         // Load saved settings when page loads

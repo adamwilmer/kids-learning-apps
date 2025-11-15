@@ -1082,15 +1082,27 @@
         }
 
         function resetQuiz() {
+            const hasAnswers = quizScore > 0 || quizIndex > 0;
+
             // Track quiz completion/reset
-            if (typeof gtag !== 'undefined' && quizScore > 0) {
-                const percentage = Math.round((quizScore / quizQuestions.length) * 100);
-                gtag('event', 'quiz_complete', {
-                    activity: 'karate-grading',
-                    score_percentage: percentage,
-                    correct_count: quizScore,
-                    total_questions: quizQuestions.length
-                });
+            if (typeof gtag !== 'undefined') {
+                if (hasAnswers) {
+                    const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+                    gtag('event', 'quiz_complete', {
+                        activity: 'karate-grading',
+                        completion_type: 'reset',
+                        score_percentage: percentage,
+                        correct_count: quizScore,
+                        total_questions: quizQuestions.length,
+                        questions_answered: quizIndex
+                    });
+                } else {
+                    // Just a reset without any progress
+                    gtag('event', 'quiz_reset', {
+                        activity: 'karate-grading',
+                        questions_answered: 0
+                    });
+                }
             }
 
             quizIndex = 0;
@@ -1101,6 +1113,16 @@
         function toggleSection(sectionName) {
             const content = document.getElementById(`${sectionName}Content`);
             const button = document.getElementById(`${sectionName}Toggle`);
+            const isExpanding = !content.classList.contains('expanded');
+
+            // Track section toggling
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'section_toggle', {
+                    activity: 'karate-grading',
+                    section_name: sectionName,
+                    action: isExpanding ? 'show' : 'hide'
+                });
+            }
 
             if (content.classList.contains('expanded')) {
                 content.classList.remove('expanded');

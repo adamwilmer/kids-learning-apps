@@ -661,9 +661,20 @@
         let quizMode = ''; // 'one-person' or 'two-person'
         let selectedWordSet = 'year1'; // default word set
         let nextWordTimeout = null; // Track timeout for auto-advancing to next word
+        let completionType = 'natural'; // natural or early_finish
 
         function updateWordSet() {
+            const oldWordSet = selectedWordSet;
             selectedWordSet = document.getElementById('word-set-select').value;
+
+            // Track word set change
+            if (typeof gtag !== 'undefined' && oldWordSet !== selectedWordSet) {
+                gtag('event', 'setting_change', {
+                    activity: 'spelling-bee',
+                    setting_name: 'word_set',
+                    setting_value: selectedWordSet
+                });
+            }
         }
 
         function selectMode(mode) {
@@ -706,6 +717,15 @@
 
         function speakWord() {
             if (!currentWord) return;
+
+            // Track speech button usage
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'speech_button_click', {
+                    activity: 'spelling-bee',
+                    quiz_mode: quizMode,
+                    word_index: currentIndex + 1
+                });
+            }
 
             // Cancel any ongoing speech
             speechSynthesis.cancel();
@@ -884,6 +904,8 @@
                 gtag('event', 'quiz_complete', {
                     activity: 'spelling-bee',
                     mode: quizMode,
+                    word_set: selectedWordSet,
+                    completion_type: completionType,
                     score_percentage: percentage,
                     correct_count: correctCount,
                     incorrect_count: incorrectCount,
@@ -909,6 +931,21 @@
         }
 
         function finishTest() {
+            // Determine if this is an early finish (user clicked button) or natural completion
+            const isEarlyFinish = currentIndex < shuffledWords.length;
+            if (isEarlyFinish && completionType === 'natural') {
+                completionType = 'early_finish';
+
+                // Track early finish
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'quiz_early_finish', {
+                        activity: 'spelling-bee',
+                        words_completed: correctCount + incorrectCount,
+                        words_remaining: shuffledWords.length - (correctCount + incorrectCount)
+                    });
+                }
+            }
+
             // Clear any pending timeout to prevent showing next word
             if (nextWordTimeout) {
                 clearTimeout(nextWordTimeout);
@@ -918,6 +955,19 @@
         }
 
         function resetQuiz() {
+            const wasInProgress = !document.getElementById('quiz-area').classList.contains('hidden');
+
+            // Track quiz reset/abandonment
+            if (wasInProgress && typeof gtag !== 'undefined') {
+                gtag('event', 'quiz_reset', {
+                    activity: 'spelling-bee',
+                    words_completed: correctCount + incorrectCount,
+                    score_percentage: (correctCount + incorrectCount) > 0
+                        ? Math.round((correctCount / (correctCount + incorrectCount)) * 100)
+                        : 0
+                });
+            }
+
             // Clear any pending timeout
             if (nextWordTimeout) {
                 clearTimeout(nextWordTimeout);
@@ -926,6 +976,7 @@
 
             // Reset to mode selection
             quizMode = '';
+            completionType = 'natural';
             currentIndex = 0;
             correctCount = 0;
             incorrectCount = 0;
